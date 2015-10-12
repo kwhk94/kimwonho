@@ -1,5 +1,8 @@
 __author__ = 'kkk'
 from pico2d import*
+import game_framework
+import diceanimation2
+import title
 
 import random
 
@@ -34,12 +37,7 @@ class Map():
 open_canvas()
 
 
-map =[Map() for i in range(3)]
 
-map[1].number=1
-map[2].number=2
-
-running =True
 
 
 
@@ -48,22 +46,44 @@ def handle_events():
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
-            running = False
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            running = False
-        if event.type == SDL_KEYDOWN and event.key==SDLK_a:
-            for i in diceteam:
-                i.frame=0
+             game_framework.quit()
+        else:
+            if(event.type,event.key)==(SDL_KEYDOWN,SDLK_ESCAPE):
+                game_framework.quit()
+            elif (event.type,event.key)==(SDL_KEYDOWN,SDLK_SPACE):
+                game_framework.change_state(title)
+            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_a):
+                 game_framework.push_state(diceanimation2)
 
 
 
 
-while running:
-    handle_events()
+
+def enter():
+    global map
+    map=[Map() for i in range(3)]
+
+
+
+def exit():
+    global map
+    del(map)
+
+
+def pause(): pass
+
+
+def resume(): pass
+
+def update():
+    global map
+    map =[Map() for i in range(3)]
+    map[1].number=1
+    map[2].number=2
+
+def draw():
     clear_canvas()
+    global map
     for m in map:
-        m.draw()
+         m.draw()
     update_canvas()
-    delay(0.1)
-
-close_canvas()

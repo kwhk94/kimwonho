@@ -6,8 +6,10 @@ import game_framework
 import map
 
 class Dice():
+    image = None
     def __init__(self):
-        self.image=load_image('DICE-4.png')
+        if Dice.image==None:
+            Dice.image=load_image('DICE-4.png')
         self.frame=0
         self.xpos=random.randint(70,540)
         self.frameyy=0
@@ -25,7 +27,7 @@ def handle_events():
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
-           game_framework.quit()
+            game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key==SDLK_a:
@@ -38,11 +40,11 @@ def handle_events():
 
 def enter():
     global diceteam
+    global dice_num
     diceteam=[Dice() for i in range(6)]
     for i in diceteam:
         i.frameyy=random.randint(0,5)
-
-
+    dice_num=[diceteam[i].frameyy for i in range(6)]
 
 def exit():
     global diceteam
@@ -52,7 +54,9 @@ def exit():
 def pause(): pass
 
 
-def resume(): pass
+def resume():
+    global dice_num
+    dice_num=[diceteam[i].frameyy for i in range(6)]
 
 def update():
     global diceteam
@@ -65,4 +69,4 @@ def draw():
     for boy in diceteam:
         boy.draw()
     update_canvas()
-    delay(0.05)
+    delay(0.03)

@@ -22,8 +22,10 @@ global xpos,ypos
 xpos,ypos=0,0
 
 class Map():
+    image = None
     def __init__(self):
-        self.image=[load_image('realmap (12).png'),load_image('realmap (8).png')]
+        if Map.image==None:
+            Map.image=[load_image('realmap (12).png'),load_image('realmap (8).png')]
         self.number=0
     def draw(self):
         global xpos,ypos
@@ -64,13 +66,13 @@ def handle_events():
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_a):
                  game_framework.push_state(diceanimation2)
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_RIGHT):
-                xpos=xpos+10
-            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_LEFT):
                 xpos=xpos-10
+            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_LEFT):
+                xpos=xpos+10
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_UP):
-                ypos=ypos+10
-            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_DOWN):
                 ypos=ypos-10
+            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_DOWN):
+                ypos=ypos+10
 
 
 
@@ -87,7 +89,9 @@ def exit():
     del(map)
 
 
-def pause(): pass
+def pause():
+    global dice_num
+
 
 
 def resume(): pass
@@ -102,6 +106,7 @@ def update():
 
 
 def draw():
+    global dice_num
     clear_canvas()
     global map
     for m in map:

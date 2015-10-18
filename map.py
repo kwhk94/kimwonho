@@ -23,10 +23,13 @@ xpos,ypos=0,0
 
 class Map():
     image = None
+
+    global xpos,ypos
     def __init__(self):
         if Map.image==None:
             Map.image=[load_image('realmap (12).png'),load_image('realmap (8).png')]
         self.number=0
+
     def draw(self):
         global xpos,ypos
         if self.number==0:
@@ -42,18 +45,62 @@ class Map():
         elif self.number==5:
             self.image[1].clip_draw(0,0,400,385,465+267+xpos,286+238+ypos)
 
+class Move():
+    global xpos,ypos
+    stop,rightmove,leftmove,upmove,downmove=0,1,2,3,4
+    def __init__(self):
+        self.state=self.stop
 
+    def Stop(self):
+        xpos,ypos
+        self.state=self.stop
+    def Rightmove(self):
+        global xpos,ypos
+        xpos=xpos-1
+        self.state=self.rightmove
 
-open_canvas()
+    def Leftmove(self):
+        global xpos,ypos
+        xpos=xpos+1
+        self.state=self.leftmove
+    def Upmove(self):
+        global xpos,ypos
+        ypos=ypos-1
+        self.state=self.upmove
+    def Downmove(self):
+        global xpos,ypos
+        ypos=ypos+1
+        self.state=self.downmove
+    def update(self):
+        self.handle_state[self.state](self)
 
+    handle_state={
+        stop:Stop,
+        rightmove:Rightmove,
+        leftmove:Leftmove,
+        upmove:Upmove,
+        downmove:Downmove
+        }
+class Chracter():
+    image = None
 
+    global xpos,ypos
+    def __init__(self):
+        if Chracter.image==None:
+            Chracter.image=load_image('Chracter.png')
+        self.number=0
 
-
+    def draw(self):
+         global xpos,ypos
+         self.image.clip_draw(0,0,89,119,200+xpos,50+ypos)
 
 
 def handle_events():
     global running
     global xpos,ypos
+    global map
+    global move
+    Stop,Right,Left,UP,DOWN=0,1,2,3,4
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -66,13 +113,19 @@ def handle_events():
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_a):
                  game_framework.push_state(diceanimation2)
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_RIGHT):
-                xpos=xpos-10
+                if move.state==move.stop :
+                    move.state=move.rightmove
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_LEFT):
-                xpos=xpos+10
+                if move.state==move.stop :
+                    move.state=move.leftmove
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_UP):
-                ypos=ypos-10
+                if move.state==move.stop :
+                    move.state=move.upmove
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_DOWN):
-                ypos=ypos+10
+                if move.state==move.stop :
+                    move.state=move.downmove
+            elif(event.type==SDL_KEYUP):
+                move.state=move.stop
 
 
 
@@ -80,6 +133,10 @@ def handle_events():
 
 def enter():
     global map
+    global move
+    global chracter
+    chracter=Chracter()
+    move=Move()
     map=[Map() for i in range(6)]
 
 
@@ -91,24 +148,31 @@ def exit():
 
 def pause():
     global dice_num
-
+    for i in range(6):
+         dice_num=[i]
 
 
 def resume(): pass
 
 def update():
     global map
+    global move
     a=0
+    move.update()
     map =[Map() for i in range(6)]
     for i in map:
         i.number=a
         a=a+1
 
-
 def draw():
     global dice_num
+    global chracter
+
+
     clear_canvas()
     global map
+
     for m in map:
          m.draw()
+    chracter.draw()
     update_canvas()

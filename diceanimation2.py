@@ -57,6 +57,7 @@ def pause(): pass
 def resume():
     global dice_num
     dice_num=[diceteam[i].frameyy for i in range(6)]
+    print(dice_num for i in range(6))
 
 def update():
     global diceteam
@@ -65,8 +66,10 @@ def update():
 
 
 def draw():
+    global dice_num
     clear_canvas()
     for boy in diceteam:
         boy.draw()
     update_canvas()
+    dice_num=[diceteam[i].frameyy for i in range(6)]
     delay(0.03)

@@ -21,14 +21,11 @@ class Dice():
 global xpos,ypos
 xpos,ypos=0,0
 
-global map_x,map_y
-map_x=[[200+xpos,200+xpos,200+xpos,200+xpos,200+xpos,200+xpos,200+xpos],[]]
-map_y=[[50+ypos,50+ypos,50+ypos,50+ypos,50+ypos,50+ypos,50+ypos],[]]
-
 class Map():
     image = None
-
+    maponoff=None
     global xpos,ypos
+
     def __init__(self):
         if Map.image==None:
             Map.image=[load_image('realmap (12).png'),load_image('realmap (8).png'),
@@ -36,14 +33,15 @@ class Map():
                        load_image('realmap (3).png'),load_image('realmap (4).png')]
         self.number=0
         self.mapnumber=1
-        self.maponoff=[1,0,0,0,0,0]
+        if Map.maponoff==None:
+            Map.maponoff=0
 
 
 
     def draw(self):
         global xpos,ypos
         if self.number==0:
-          self.image[0].clip_draw(0,0,400,385,200+xpos,50+ypos)
+          self.image[self.mapnumber].clip_draw(0,0,400,385,200+xpos,50+ypos)
         elif self.number==1:
             self.image[self.mapnumber].clip_draw(0,0,400,385,136+xpos,390+ypos)
         elif self.number==2:
@@ -58,6 +56,13 @@ class Map():
 class Tile():
       global xpos,ypos
       x,y=None,None
+      TileType={
+          0:[1,1,1,0,0,0,1],
+          1:[1,1,1,1,1,1,1],
+          2:[1,1,1,1,1,1,1],
+          3:[0,1,1,1,1,1,1],
+          4:[0,0,1,1,1,1,1]
+      }
       def __init__(self):
           if Tile.x == None:
               Tile.x=[[200+xpos,200+xpos+200*(1/3),200+xpos+200*(2/3),200+xpos+200*(1/3)
@@ -88,6 +93,10 @@ class Tile():
                    [390+ypos,390+ypos+100,390+ypos,390+ypos-100,390+ypos-100,390+ypos,390+ypos+100],
                     [286+ypos,286+ypos+100,286+ypos,286+ypos-100,286+ypos-100,286+ypos,286+ypos+100]
                    ]
+           for j in range(3):
+               for i in range(5):
+                   if map[j].mapnumber==i:
+                        Tile.type[j]=self.TileType[i]
            self.time2+=1
            if self.time2%8==0:
             self.time=self.time+1
@@ -162,14 +171,18 @@ class Chracter():
         global xpos,ypos
         global tile
         global mouse_x,mouse_y
+        global map
         Chracter.state=[200+xpos+ Chracter.Chracter_x,50+ypos+Chracter.Chracter_y]
         for j in range(3):
            for i in range(7):
              if tile.x[j][i]<chracter.state[0]+150 and tile.x[j][i]>chracter.state[0]-150 \
-                     and tile.y[j][i]<chracter.state[1]+150 and tile.y[j][i]>chracter.state[1]-150 and Tile.type[j][i]!=0: #캐릭터의 주위 타일
+                     and tile.y[j][i]<chracter.state[1]+150 and tile.y[j][i]>chracter.state[1]-150 and Tile.type[j][i]!=0:#캐릭터의 주위 타일
                  if mouse_x<tile.x[j][i]+25 and mouse_x>tile.x[j][i]-25 and mouse_y< tile.y[j][i]+25 and mouse_y>tile.y[j][i]-25 :
                     Chracter.Chracter_x+= tile.x[j][i]-Chracter.state[0]
                     Chracter.Chracter_y+=  tile.y[j][i]-Chracter.state[1]
+                 if map[j].maponoff==0:
+                    map[j].maponoff=1;
+                    map[j].mapnumber=random.randint(2,4)
 
 
 
@@ -225,11 +238,18 @@ def enter():
     global chracter
     global tile
     global mouse_x,mouse_y
+    a=0
+    map =[Map() for i in range(6)]
+    for i in map:
+        i.number=a
+        a=a+1
+    map[0].maponoff=1
+    map[0].mapnumber=0
     mouse_x,mouse_y =0,0
     tile=Tile()
     chracter=Chracter()
     move=Move()
-    map=[Map() for i in range(6)]
+    #map[0].mapononff=1
 
 
 
@@ -255,14 +275,14 @@ def update():
     global tile
     chracter.update()
 
-    a=0
     move.update()
     tile.update()
-    map =[Map() for i in range(6)]
-    for i in map:
-        i.number=a
-        a=a+1
-    map[1].mapnumber=2;
+
+
+
+
+
+
 
 def draw():
     global dice_num

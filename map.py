@@ -206,6 +206,8 @@ class Chracter():
                  if mouse_x<tile.x[j][i]+25 and mouse_x>tile.x[j][i]-25 and mouse_y< tile.y[j][i]+25 and mouse_y>tile.y[j][i]-25 :
                     Chracter.Chracter_x+= tile.x[j][i]-Chracter.state[0]
                     Chracter.Chracter_y+=  tile.y[j][i]-Chracter.state[1]
+                    mouse_x=-100
+                    mouse_y=-100
                  if map[j].maponoff==0:
                     map[j].maponoff=1;
                     map[j].mapnumber=random.randint(2,9)
@@ -250,9 +252,9 @@ def handle_events():
                     move.state=move.downmove
             elif(event.type==SDL_KEYUP):
                 move.state=move.stop
-            elif (event.type)==(SDL_MOUSEBUTTONDOWN):
-                global mouse_x,mouse_y
-                mouse_x,mouse_y=event.x,599-event.y
+        if (event.type,event.button)==(SDL_MOUSEBUTTONDOWN,SDL_BUTTON_LEFT):
+             global mouse_x,mouse_y
+             mouse_x,mouse_y=event.x,599-event.y
 
 
 

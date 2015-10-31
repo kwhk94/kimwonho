@@ -226,6 +226,7 @@ def handle_events():
     global move
     global tile
     global mouse_x,mouse_y
+    global pause
     Stop,Right,Left,UP,DOWN=0,1,2,3,4
     events = get_events()
     for event in events:
@@ -252,6 +253,9 @@ def handle_events():
                     move.state=move.downmove
             elif(event.type==SDL_KEYUP):
                 move.state=move.stop
+            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_p):
+                if pause==1: pause=0
+                elif pause==0:pause=1
         if (event.type,event.button)==(SDL_MOUSEBUTTONDOWN,SDL_BUTTON_LEFT):
              global mouse_x,mouse_y
              mouse_x,mouse_y=event.x,599-event.y
@@ -265,7 +269,9 @@ def enter():
     global move
     global chracter
     global tile
+    global pause
     global mouse_x,mouse_y
+    pause=0
     a=0
     map =[Map() for i in range(6)]
     for i in map:
@@ -301,10 +307,10 @@ def update():
     global move
     global chracter
     global tile
-    chracter.update()
-
-    move.update()
-    tile.update()
+    if pause==0:
+        chracter.update()
+        move.update()
+        tile.update()
 
 
 

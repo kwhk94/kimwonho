@@ -3,9 +3,9 @@ from pico2d import*
 import game_framework
 import diceanimation2
 import title
-
+import json
 import random
-
+global dice_num
 class Dice():
     def __init__(self):
         self.image=load_image('DICE-4.png')
@@ -185,13 +185,22 @@ class Move():
 class Chracter():
     image = None
     state=[200+xpos,50+ypos]
-
     global xpos,ypos
     def __init__(self):
+        Stat_file= open('Stat.txt','r')
+        Stat_data=json.load(Stat_file)
+        Stat_file.close()
         if Chracter.image==None:
             Chracter.image=load_image('Chracter.png')
         self.number=0
         Chracter.Chracter_x, Chracter.Chracter_y=0,0
+        Chracter.hp=Stat_data["HP"]
+        Chracter.df=Stat_data["DF"]
+        Chracter.str=Stat_data["STR"]
+        Chracter.agi=Stat_data["AGI"]
+        Chracter.luk=Stat_data["LUK"]
+        Chracter.int=Stat_data["INT"]
+
 
     def update(self):
         global xpos,ypos
@@ -226,7 +235,8 @@ def handle_events():
     global move
     global tile
     global mouse_x,mouse_y
-    global pause
+    global pausenum
+    global dice_num
     Stop,Right,Left,UP,DOWN=0,1,2,3,4
     events = get_events()
     for event in events:
@@ -254,8 +264,12 @@ def handle_events():
             elif(event.type==SDL_KEYUP):
                 move.state=move.stop
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_p):
-                if pause==1: pause=0
-                elif pause==0:pause=1
+                if pausenum==1: pausenum=0
+                elif pausenum==0:pausenum=1
+            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_o):
+                 print(diceanimation2.dice_num)
+            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_q):
+                 print(chracter.hp)
         if (event.type,event.button)==(SDL_MOUSEBUTTONDOWN,SDL_BUTTON_LEFT):
              global mouse_x,mouse_y
              mouse_x,mouse_y=event.x,599-event.y
@@ -269,9 +283,10 @@ def enter():
     global move
     global chracter
     global tile
-    global pause
+    global pausenum
     global mouse_x,mouse_y
-    pause=0
+    global dice_num
+    pausenum=0
     a=0
     map =[Map() for i in range(6)]
     for i in map:
@@ -296,18 +311,19 @@ def exit():
 
 def pause():
     global dice_num
-    for i in range(6):
-         dice_num=[i]
+    global chracter
 
 
-def resume(): pass
+def resume():
+    global dice_num
+    global chracter
 
 def update():
     global map
     global move
     global chracter
     global tile
-    if pause==0:
+    if pausenum==0:
         chracter.update()
         move.update()
         tile.update()

@@ -1,6 +1,7 @@
 import game_framework
 import map
 from pico2d import *
+import diceanimation2
 
 
 name = "StartState"

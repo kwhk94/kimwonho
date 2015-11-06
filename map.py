@@ -58,19 +58,23 @@ class Map():
 class Tile():
       global xpos,ypos
       x,y=None,None
+      etc_file= open('etc.txt','r')
+      etc=json.load(etc_file)
+      etc_file.close()
       TileType={
-          0:[1,1,1,0,0,0,1],
-          1:[1,1,1,1,1,1,1],
-          2:[1,1,1,1,1,1,1],
-          3:[0,1,1,1,1,1,1],
-          4:[0,0,1,1,1,1,1],
-          5:[1,0,1,1,1,1,1],
-          6:[1,0,0,1,0,1,1],
-          7:[1,1,0,1,1,1,1],
-          8:[1,1,1,1,1,1,1],
-          9:[1,1,1,1,1,1,1]
+          0:etc["TileType"]["0"],
+          1:etc["TileType"]["1"],
+          2:etc["TileType"]["2"],
+          3:etc["TileType"]["3"],
+          4:etc["TileType"]["4"],
+          5:etc["TileType"]["5"],
+          6:etc["TileType"]["6"],
+          7:etc["TileType"]["7"],
+          8:etc["TileType"]["8"],
+          9:etc["TileType"]["9"]
       }
       def __init__(self):
+
           if Tile.x == None:
               Tile.x=[[200+xpos,200+xpos+200*(1/3),200+xpos+200*(2/3),200+xpos+200*(1/3)
                           ,200+xpos-200*(1/3),200+xpos-200*(2/3),200+xpos-200*(1/3)],
@@ -99,6 +103,7 @@ class Tile():
           self.time2=0
 
       def update(self):
+
            global xpos,ypos
            Tile.x=[[200+xpos,200+xpos+200*(1/3),200+xpos+200*(2/3),200+xpos+200*(1/3)
                           ,200+xpos-200*(1/3),200+xpos-200*(2/3),200+xpos-200*(1/3)],
@@ -138,6 +143,24 @@ class Tile():
                  Tile.type[j][i]!=0 :
               self.ring_image.clip_draw(62*(self.time%4),0,64,66,Tile.x[j][i],Tile.y[j][i])
           #self.ring_image.clip_draw(62*(self.time%4),0,64,66,mouse_x,mouse_y)
+
+class Stat():
+    global statpng
+    global statbar
+
+
+    def __init__(self):
+        self.image=load_image("statbar.png")
+        self.blood=load_image("Blood.png")
+        self.armor=load_image("armor.png")
+        self.onoff=0;
+    def draw(self):
+        if self.onoff==0:
+            self.image.clip_draw(0,0,159,250,800-80,600-120)
+            self.blood.clip_draw(70*(chracter.hp-1),0,70,99,800-122,600-49)
+            self.armor.clip_draw(84*(chracter.df-1),0,84,99,800-50,600-49)
+
+
 
 class Move():
     global xpos,ypos
@@ -211,7 +234,8 @@ class Chracter():
         for j in range(6):
            for i in range(7):
              if tile.x[j][i]<chracter.state[0]+150 and tile.x[j][i]>chracter.state[0]-150 \
-                     and tile.y[j][i]<chracter.state[1]+150 and tile.y[j][i]>chracter.state[1]-150 and Tile.type[j][i]!=0:#캐릭터의 주위 타일
+                     and tile.y[j][i]<chracter.state[1]+150 and tile.y[j][i]>chracter.state[1]-150 \
+                     and Tile.type[j][i]!=0:#캐릭터의 주위 타일
                  if mouse_x<tile.x[j][i]+25 and mouse_x>tile.x[j][i]-25 and mouse_y< tile.y[j][i]+25 and mouse_y>tile.y[j][i]-25 :
                     Chracter.Chracter_x+= tile.x[j][i]-Chracter.state[0]
                     Chracter.Chracter_y+=  tile.y[j][i]-Chracter.state[1]
@@ -234,6 +258,7 @@ def handle_events():
     global map
     global move
     global tile
+    global stat
     global mouse_x,mouse_y
     global pausenum
     global dice_num
@@ -268,6 +293,8 @@ def handle_events():
                 elif pausenum==0:pausenum=1
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_o):
                  print(diceanimation2.dice_num)
+            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_i):
+                 stat.onoff= not stat.onoff
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_q):
                  print(chracter.hp)
         if (event.type,event.button)==(SDL_MOUSEBUTTONDOWN,SDL_BUTTON_LEFT):
@@ -286,6 +313,8 @@ def enter():
     global pausenum
     global mouse_x,mouse_y
     global dice_num
+    global stat
+    stat=Stat()
     pausenum=0
     a=0
     map =[Map() for i in range(6)]
@@ -327,6 +356,8 @@ def update():
         chracter.update()
         move.update()
         tile.update()
+    global statbar
+
 
 
 
@@ -338,7 +369,8 @@ def draw():
     global dice_num
     global chracter
     global tile
-
+    global statbar
+    global statpng
 
     clear_canvas()
     handle_events()
@@ -350,4 +382,7 @@ def draw():
 
     tile.draw()
     chracter.draw()
+    stat.draw()
+
+
     update_canvas()

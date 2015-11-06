@@ -46,12 +46,10 @@ def handle_events():
 def enter():
     global diceteam
     global dice_num
-    global chracter
-    chracter=map.chracter
-    diceteam=[Dice() for i in range(chracter.hp)]
+    diceteam=[Dice() for i in range(map.chracter.hp)]
     for i in diceteam:
         i.frameyy=random.randint(1,6)
-    dice_num=[(diceteam[i].frameyy for i in  range(chracter.hp))]
+    dice_num=[(diceteam[i].frameyy for i in  range(map.chracter.hp))]
 
 def exit():
     global diceteam
@@ -75,11 +73,12 @@ def update():
         boy.update()
 
 
+
 def draw():
     global dice_num
     clear_canvas()
     for boy in diceteam:
         boy.draw()
     update_canvas()
-    dice_num=[diceteam[i].frameyy for i in range(chracter.hp)]
+    dice_num=[diceteam[i].frameyy for i in range(map.chracter.hp)]
     delay(0.03)

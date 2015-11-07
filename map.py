@@ -6,9 +6,11 @@ import title
 import json
 import random
 global dice_num
+global font
+
 class Dice():
     def __init__(self):
-        self.image=load_image('DICE-4.png')
+        self.image=load_image('png\\DICE-4.png')
         self.frame=0
         self.xpos=random.randint(70,540)
         self.frameyy=0
@@ -25,14 +27,18 @@ class Map():
     image = None
     maponoff=None
     global xpos,ypos
+    global etc
+    etc_file= open('etc\\etc.txt','r')
+    etc=json.load(etc_file)
+    etc_file.close()
 
     def __init__(self):
         if Map.image==None:
-            Map.image=[load_image('realmap (12).png'),load_image('realmap (8).png'),
-                       load_image('realmap (1).png'),load_image('realmap (2).png'),
-                       load_image('realmap (3).png'),load_image('realmap (4).png'),
-                       load_image('realmap (5).png'),load_image('realmap (6).png'),
-                       load_image('realmap (7).png'),load_image('realmap (9).png')]
+            Map.image=[load_image('png\\realmap (12).png'),load_image('png\\realmap (8).png'),
+                       load_image('png\\realmap (1).png'),load_image('png\\realmap (2).png'),
+                       load_image('png\\realmap (3).png'),load_image('png\\realmap (4).png'),
+                       load_image('png\\realmap (5).png'),load_image('png\\realmap (6).png'),
+                       load_image('png\\realmap (7).png'),load_image('png\\realmap (9).png')]
         self.number=0
         self.mapnumber=1
         if Map.maponoff==None:
@@ -43,22 +49,25 @@ class Map():
     def draw(self):
         global xpos,ypos
         if self.number==0:
-          self.image[self.mapnumber].clip_draw(0,0,400,385,200+xpos,50+ypos)
+          self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][0]+xpos,etc["mapy"][0]+ypos)
         elif self.number==1:
-            self.image[self.mapnumber].clip_draw(0,0,400,385,136+xpos,390+ypos)
+            self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][1]+xpos,etc["mapy"][1]+ypos)
         elif self.number==2:
-            self.image[self.mapnumber].clip_draw(0,0,400,385,465+xpos,286+ypos)
+            self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][2]+xpos,etc["mapy"][2]+ypos)
         elif self.number==3:
-            self.image[self.mapnumber].clip_draw(0,0,400,385,74+xpos,734+ypos)
+            self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][3]+xpos,etc["mapy"][3]+ypos)
         elif self.number==4:
-            self.image[self.mapnumber].clip_draw(0,0,400,385,403+xpos,628+ypos)
+            self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][4]+xpos,etc["mapy"][4]+ypos)
         elif self.number==5:
-            self.image[self.mapnumber].clip_draw(0,0,400,385,732+xpos,524+ypos)
+            self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][5]+xpos,etc["mapy"][5]+ypos)
 
 class Tile():
       global xpos,ypos
-      x,y=None,None
-      etc_file= open('etc.txt','r')
+      x,y=[],[]
+      global etc_file
+      global timer
+      ring_image=None
+      etc_file= open('etc\\etc.txt','r')
       etc=json.load(etc_file)
       etc_file.close()
       TileType={
@@ -74,64 +83,30 @@ class Tile():
           9:etc["TileType"]["9"]
       }
       def __init__(self):
-
-          if Tile.x == None:
-              Tile.x=[[200+xpos,200+xpos+200*(1/3),200+xpos+200*(2/3),200+xpos+200*(1/3)
-                          ,200+xpos-200*(1/3),200+xpos-200*(2/3),200+xpos-200*(1/3)],
-                      [136+xpos,136+xpos+200*(1/3),136+xpos+200*(2/3),136+xpos+200*(1/3),
-                       136+xpos-200*(1/3),136+xpos-200*(2/3),136+xpos-200*(1/3)],
-                          [465+xpos,465+xpos+200*(1/3),465+xpos+200*(2/3),465+xpos+200*(1/3),
-                       465+xpos-200*(1/3),465+xpos-200*(2/3),465+xpos-200*(1/3)],
-                          [74+xpos,74+xpos+200*(1/3),74+xpos+200*(2/3),74+xpos+200*(1/3),
-                       74+xpos-200*(1/3),74+xpos-200*(2/3),74+xpos-200*(1/3)],
-                          [403+xpos,403+xpos+200*(1/3),403+xpos+200*(2/3),403+xpos+200*(1/3),
-                       403+xpos-200*(1/3),403+xpos-200*(2/3),403+xpos-200*(1/3)],
-                          [732+xpos,732+xpos+200*(1/3),732+xpos+200*(2/3),732+xpos+200*(1/3),
-                       732+xpos-200*(1/3),732+xpos-200*(2/3),732+xpos-200*(1/3)]
-                      ]
-          if Tile.y == None:
-              Tile.y=[[50+ypos,50+ypos+100,50+ypos,50+ypos-100,50+ypos-100,50+ypos,50+ypos+100],
-                     [390+ypos,390+ypos+100,390+ypos,390+ypos-100,390+ypos-100,390+ypos,390+ypos+100],
-                     [286+ypos,286+ypos+100,286+ypos,286+ypos-100,286+ypos-100,286+ypos,286+ypos+100],
-                     [734+ypos,734+ypos+100,734+ypos,734+ypos-100,734+ypos-100,734+ypos,734+ypos+100],
-                     [628+ypos,628+ypos+100,628+ypos,628+ypos-100,628+ypos-100,628+ypos,628+ypos+100],
-                     [524+ypos,524+ypos+100,524+ypos,524+ypos-100,524+ypos-100,524+ypos,524+ypos+100]]
-          Tile.type=[[1,1,1,0,0,0,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1],
-                     [1,1,1,1,1,1,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1]]
-          self.ring_image=load_image('ring.png')
+          for i in range(6):
+                    Tile.x.append([etc["mapx"][i]+etc["tilexsize"][j]+xpos for j in range(7)])
+          for i in range(6):
+                    Tile.y.append([etc["mapy"][i]+etc["tileysize"][j]+ypos for j in range(7)])
+          Tile.type=[self.TileType[i] for i in range(10)]
+          if Tile.ring_image==None:
+                Tile.ring_image=load_image('png\\ring.png')
           self.time=0
-          self.time2=0
 
       def update(self):
 
            global xpos,ypos
-           Tile.x=[[200+xpos,200+xpos+200*(1/3),200+xpos+200*(2/3),200+xpos+200*(1/3)
-                          ,200+xpos-200*(1/3),200+xpos-200*(2/3),200+xpos-200*(1/3)],
-                      [136+xpos,136+xpos+200*(1/3),136+xpos+200*(2/3),136+xpos+200*(1/3),
-                       136+xpos-200*(1/3),136+xpos-200*(2/3),136+xpos-200*(1/3)],
-                          [465+xpos,465+xpos+200*(1/3),465+xpos+200*(2/3),465+xpos+200*(1/3),
-                       465+xpos-200*(1/3),465+xpos-200*(2/3),465+xpos-200*(1/3)],
-                          [74+xpos,74+xpos+200*(1/3),74+xpos+200*(2/3),74+xpos+200*(1/3),
-                       74+xpos-200*(1/3),74+xpos-200*(2/3),74+xpos-200*(1/3)],
-                          [403+xpos,403+xpos+200*(1/3),403+xpos+200*(2/3),403+xpos+200*(1/3),
-                       403+xpos-200*(1/3),403+xpos-200*(2/3),403+xpos-200*(1/3)],
-                          [732+xpos,732+xpos+200*(1/3),732+xpos+200*(2/3),732+xpos+200*(1/3),
-                       732+xpos-200*(1/3),732+xpos-200*(2/3),732+xpos-200*(1/3)]]
-           Tile.y=[[50+ypos,50+ypos+100,50+ypos,50+ypos-100,50+ypos-100,50+ypos,50+ypos+100],
-                     [390+ypos,390+ypos+100,390+ypos,390+ypos-100,390+ypos-100,390+ypos,390+ypos+100],
-                     [286+ypos,286+ypos+100,286+ypos,286+ypos-100,286+ypos-100,286+ypos,286+ypos+100],
-                     [734+ypos,734+ypos+100,734+ypos,734+ypos-100,734+ypos-100,734+ypos,734+ypos+100],
-                     [628+ypos,628+ypos+100,628+ypos,628+ypos-100,628+ypos-100,628+ypos,628+ypos+100],
-                     [524+ypos,524+ypos+100,524+ypos,524+ypos-100,524+ypos-100,524+ypos,524+ypos+100]
-                   ]
+           for i in range(6):
+              for j in range(7):
+                  Tile.x[i][j]=etc["mapx"][i]+etc["tilexsize"][j]+xpos
+                  Tile.y[i][j]=etc["mapy"][i]+etc["tileysize"][j]+ypos
+
            for j in range(6):
                for i in range(10):
                    if map[j].mapnumber==i:
                         Tile.type[j]=self.TileType[i]
-           self.time2+=1
-           if self.time2%8==0:
-            self.time=self.time+1
-           delay(0.01)
+           if timer%4==0:
+               self.time+=1
+
 
       def draw(self):
           global chracter
@@ -147,19 +122,27 @@ class Tile():
 class Stat():
     global statpng
     global statbar
+    global font
 
 
     def __init__(self):
-        self.image=load_image("statbar.png")
-        self.blood=load_image("Blood.png")
-        self.armor=load_image("armor.png")
+        self.image=load_image("png\\statbar.png")
+        self.blood=load_image("png\\Blood.png")
+        self.armor=load_image("png\\armor.png")
         self.onoff=0;
     def draw(self):
         if self.onoff==0:
             self.image.clip_draw(0,0,159,250,800-80,600-120)
             self.blood.clip_draw(70*(chracter.hp-1),0,70,99,800-122,600-49)
             self.armor.clip_draw(84*(chracter.df-1),0,84,99,800-50,600-49)
-
+            font.draw(800-150,600-120,'STR :')
+            font.draw(800-40,600-120,"%d"%chracter.str,color=(200,0,0))
+            font.draw(800-150,600-150,'LUK :')
+            font.draw(800-40,600-150,"%d"%chracter.luk,color=(0,200,0))
+            font.draw(800-150,600-180,'INT :')
+            font.draw(800-40,600-180,"%d"%chracter.int,color=(0,0,200))
+            font.draw(800-150,600-210,'AGI :')
+            font.draw(800-40,600-210,"%d"%chracter.agi,color=(100,100,100))
 
 
 class Move():
@@ -210,11 +193,11 @@ class Chracter():
     state=[200+xpos,50+ypos]
     global xpos,ypos
     def __init__(self):
-        Stat_file= open('Stat.txt','r')
+        Stat_file= open('etc\\Stat.txt','r')
         Stat_data=json.load(Stat_file)
         Stat_file.close()
         if Chracter.image==None:
-            Chracter.image=load_image('Chracter.png')
+            Chracter.image=load_image('png\\Chracter.png')
         self.number=0
         Chracter.Chracter_x, Chracter.Chracter_y=0,0
         Chracter.hp=Stat_data["HP"]
@@ -314,13 +297,17 @@ def enter():
     global mouse_x,mouse_y
     global dice_num
     global stat
+    global font
+    global timer
+    timer=0
+    font=load_font('etc\\font.ttf',30)
     stat=Stat()
     pausenum=0
-    a=0
+    countumber=0
     map =[Map() for i in range(6)]
     for i in map:
-        i.number=a
-        a=a+1
+        i.number=countumber
+        countumber=countumber+1
     map[0].maponoff=1
     map[0].mapnumber=0
     mouse_x,mouse_y =0,0
@@ -371,6 +358,7 @@ def draw():
     global tile
     global statbar
     global statpng
+    global timer
 
     clear_canvas()
     handle_events()
@@ -383,6 +371,8 @@ def draw():
     tile.draw()
     chracter.draw()
     stat.draw()
+    timer+=1
+    delay(0.01)
 
 
     update_canvas()

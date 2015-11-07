@@ -12,7 +12,7 @@ class Dice():
     image = None
     def __init__(self):
         if Dice.image==None:
-            Dice.image=load_image('DICE-4.png')
+            Dice.image=load_image('png\\DICE-4.png')
         self.frame=0
         self.xpos=random.randint(70,540)
         self.frameyy=0
@@ -20,7 +20,7 @@ class Dice():
         if(self.frame<21):
             self.frame=self.frame+1
     def draw(self):
-         self.image.clip_draw((self.frame)*140,283*(self.frameyy-1),140,240,self.xpos,300)
+         self.image.clip_draw((self.frame)*140,283*(6-(self.frameyy)),140,240,self.xpos,300)
 
 
 
@@ -38,6 +38,14 @@ def handle_events():
                 i.frame=0
         elif event.type == SDL_KEYDOWN and event.key==SDLK_b:
              game_framework.pop_state()
+        elif event.type == SDL_KEYDOWN and event.key==SDLK_c:
+            num=0
+            for i in diceteam:
+                i.frame=0
+                i.frameyy=random.randint(1,6)
+                i.xpos=random.randint(50+70*num,50+90*num)
+                num+=1
+                dice_num=[(diceteam[i].frameyy for i in  range(map.chracter.hp))]
         elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_o):
              print(dice_num)
 
@@ -47,9 +55,6 @@ def enter():
     global diceteam
     global dice_num
     diceteam=[Dice() for i in range(map.chracter.hp)]
-    for i in diceteam:
-        i.frameyy=random.randint(1,6)
-    dice_num=[(diceteam[i].frameyy for i in  range(map.chracter.hp))]
 
 def exit():
     global diceteam
@@ -59,12 +64,10 @@ def exit():
 def pause():
     global dice_num
     global chracter
-    dice_num=[diceteam[i].frameyy for i in range(6)]
 
 def resume():
     global dice_num
     global chracter
-    dice_num=[diceteam[i].frameyy for i in range(6)]
 
 
 def update():
@@ -77,8 +80,8 @@ def update():
 def draw():
     global dice_num
     clear_canvas()
-    for boy in diceteam:
-        boy.draw()
+    for dice in diceteam:
+        dice.draw()
     update_canvas()
     dice_num=[diceteam[i].frameyy for i in range(map.chracter.hp)]
     delay(0.03)

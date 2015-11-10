@@ -27,6 +27,7 @@ class Dice():
 
 def handle_events():
     global running
+    global dice_num
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -45,7 +46,7 @@ def handle_events():
                 i.frameyy=random.randint(1,6)
                 i.xpos=random.randint(50+70*num,50+90*num)
                 num+=1
-                dice_num=[(diceteam[i].frameyy for i in  range(map.chracter.hp))]
+                dice_num=[diceteam[i].frameyy for i in  range(map.chracter.hp)]
         elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_o):
              print(dice_num)
 
@@ -54,8 +55,10 @@ def handle_events():
 def enter():
     global diceteam
     global dice_num
+    map.turntype=0
+    map.turnnumber+=1
     diceteam=[Dice() for i in range(map.chracter.hp)]
-
+    dice_num=[]
 def exit():
     global diceteam
     del(diceteam)

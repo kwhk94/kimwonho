@@ -83,9 +83,11 @@ class Tile():
           9:etc["TileType"]["9"]
       }
       def __init__(self):
-          for i in range(6):
+          if Tile.x==[]:
+            for i in range(6):
                     Tile.x.append([etc["mapx"][i]+etc["tilexsize"][j]+xpos for j in range(7)])
-          for i in range(6):
+          if Tile.y==[]:
+             for i in range(6):
                     Tile.y.append([etc["mapy"][i]+etc["tileysize"][j]+ypos for j in range(7)])
           Tile.type=[self.TileType[i] for i in range(10)]
           if Tile.ring_image==None:
@@ -123,26 +125,38 @@ class Stat():
     global statpng
     global statbar
     global font
+    global smallfont
+    global turnnumber
+    image=None
+    blood=None
+    armor=None
 
 
     def __init__(self):
-        self.image=load_image("png\\statbar.png")
-        self.blood=load_image("png\\Blood.png")
-        self.armor=load_image("png\\armor.png")
+        if Stat.image==None:
+            Stat.image=load_image("png\\statbar.png")
+        if Stat.blood==None:
+            Stat.blood=load_image("png\\Blood.png")
+        if Stat.armor==None:
+            Stat.armor=load_image("png\\armor.png")
         self.onoff=0;
     def draw(self):
         if self.onoff==0:
             self.image.clip_draw(0,0,159,250,800-80,600-120)
             self.blood.clip_draw(70*(chracter.hp-1),0,70,99,800-122,600-49)
             self.armor.clip_draw(84*(chracter.df-1),0,84,99,800-50,600-49)
-            font.draw(800-150,600-120,'STR :')
-            font.draw(800-40,600-120,"%d"%chracter.str,color=(200,0,0))
-            font.draw(800-150,600-150,'LUK :')
-            font.draw(800-40,600-150,"%d"%chracter.luk,color=(0,200,0))
-            font.draw(800-150,600-180,'INT :')
-            font.draw(800-40,600-180,"%d"%chracter.int,color=(0,0,200))
-            font.draw(800-150,600-210,'AGI :')
-            font.draw(800-40,600-210,"%d"%chracter.agi,color=(100,100,100))
+            font.draw(800-150,600-130,'STR :')
+            font.draw(800-40,600-130,"%d"%chracter.str,color=(200,0,0))
+            font.draw(800-150,600-160,'LUK :')
+            font.draw(800-40,600-160,"%d"%chracter.luk,color=(0,200,0))
+            font.draw(800-150,600-190,'INT :')
+            font.draw(800-40,600-190,"%d"%chracter.int,color=(0,0,200))
+            font.draw(800-150,600-220,'AGI :')
+            font.draw(800-40,600-220,"%d"%chracter.agi,color=(100,100,100))
+            smallfont.draw(800-150,600-110,'Maxhp :')
+            smallfont.draw(800-100,600-110,"%d"%chracter.hp,color=(200,0,0))
+        font.draw(800-410,600-20,"%d"%turnnumber,color=(150,100,100))
+        font.draw(800-350,600-20,'Turn')
 
 
 class Move():
@@ -192,6 +206,7 @@ class Chracter():
     image = None
     state=[200+xpos,50+ypos]
     global xpos,ypos
+
     def __init__(self):
         Stat_file= open('etc\\Stat.txt','r')
         Stat_data=json.load(Stat_file)
@@ -201,6 +216,7 @@ class Chracter():
         self.number=0
         Chracter.Chracter_x, Chracter.Chracter_y=0,0
         Chracter.hp=Stat_data["HP"]
+        Chracter.maxhp=Stat_data["HP"]
         Chracter.df=Stat_data["DF"]
         Chracter.str=Stat_data["STR"]
         Chracter.agi=Stat_data["AGI"]
@@ -213,26 +229,41 @@ class Chracter():
         global tile
         global mouse_x,mouse_y
         global map
+        global tiletype
+        global turntype
+        global timer
+        ON,OFF=1,0
         Chracter.state=[200+xpos+ Chracter.Chracter_x,50+ypos+Chracter.Chracter_y]
         for j in range(6):
            for i in range(7):
              if tile.x[j][i]<chracter.state[0]+150 and tile.x[j][i]>chracter.state[0]-150 \
                      and tile.y[j][i]<chracter.state[1]+150 and tile.y[j][i]>chracter.state[1]-150 \
-                     and Tile.type[j][i]!=0:#캐릭터의 주위 타일
+                     and Tile.type[j][i]!=0 and turntype==0:#캐릭터의 주위 타일
                  if mouse_x<tile.x[j][i]+25 and mouse_x>tile.x[j][i]-25 and mouse_y< tile.y[j][i]+25 and mouse_y>tile.y[j][i]-25 :
                     Chracter.Chracter_x+= tile.x[j][i]-Chracter.state[0]
                     Chracter.Chracter_y+=  tile.y[j][i]-Chracter.state[1]
-                    mouse_x=-100
-                    mouse_y=-100
-                 if map[j].maponoff==0:
-                    map[j].maponoff=1;
+                    mouse_x=-1000         #마우스위치를 유지시키면 화면이 움직일시 마우스 클릭위치에따라 이벤트가 중복 발생할수있다
+                    mouse_y=-1000
+                    tiletype=Tile.type[j][i]
+                    turntype=1
+                 if map[j].maponoff==OFF:
+                    map[j].maponoff=ON;
                     map[j].mapnumber=random.randint(2,9)
 
 
 
     def draw(self):
          global xpos,ypos
+         global turntype
          self.image.clip_draw(0,0,89,119,Chracter.state[0],Chracter.state[1])
+
+
+def changemap():
+    global turntype
+    global mouse_x,mouse_y
+    game_framework.push_state(diceanimation2)
+    turntype=0
+    mouse_x,mouse_y=-1000,-1000   #마우스위치를 유지시키면 화면이 돌아올때 이벤트가중복발생된다
 
 
 def handle_events():
@@ -245,6 +276,9 @@ def handle_events():
     global mouse_x,mouse_y
     global pausenum
     global dice_num
+    global tiletype
+    global turntype
+
     Stop,Right,Left,UP,DOWN=0,1,2,3,4
     events = get_events()
     for event in events:
@@ -254,7 +288,8 @@ def handle_events():
             if(event.type,event.key)==(SDL_KEYDOWN,SDLK_ESCAPE):
                 game_framework.quit()
             elif (event.type,event.key)==(SDL_KEYDOWN,SDLK_SPACE):
-                game_framework.change_state(title)
+                if turntype==1:
+                 changemap()
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_a):
                  game_framework.push_state(diceanimation2)
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_RIGHT):
@@ -281,7 +316,6 @@ def handle_events():
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_q):
                  print(chracter.hp)
         if (event.type,event.button)==(SDL_MOUSEBUTTONDOWN,SDL_BUTTON_LEFT):
-             global mouse_x,mouse_y
              mouse_x,mouse_y=event.x,599-event.y
 
 
@@ -298,9 +332,17 @@ def enter():
     global dice_num
     global stat
     global font
+    global smallfont
     global timer
+    global tiletype
+    global turntype
+    global turnnumber
+    turnnumber=1
+    turntype=0
+    tiletype=0
     timer=0
     font=load_font('etc\\font.ttf',30)
+    smallfont=load_font('etc\\font.ttf',10)
     stat=Stat()
     pausenum=0
     countumber=0
@@ -323,6 +365,15 @@ def exit():
     del(tile)
     del(chracter)
     del(move)
+    del(pausenum)
+    del(mouse_x,mouse_y)
+    del(dice_num)
+    del(stat)
+    del(font)
+    del(smallfont)
+    del(timer)
+    del(tiletype)
+    del(turntype)
 
 
 def pause():
@@ -339,10 +390,12 @@ def update():
     global move
     global chracter
     global tile
+    global turntype
     if pausenum==0:
         chracter.update()
         move.update()
         tile.update()
+
     global statbar
 
 

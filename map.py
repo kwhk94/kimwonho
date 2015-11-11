@@ -82,6 +82,11 @@ class Tile():
           8:etc["TileType"]["8"],
           9:etc["TileType"]["9"]
       }
+      TIME_PER_ACTION=0.5
+      ACTION_PER_TIME=1.0/TIME_PER_ACTION
+      FRAMES_PER_ACTION=4
+
+
       def __init__(self):
           if Tile.x==[]:
             for i in range(6):
@@ -92,9 +97,10 @@ class Tile():
           Tile.type=[self.TileType[i] for i in range(10)]
           if Tile.ring_image==None:
                 Tile.ring_image=load_image('png\\ring.png')
-          self.time=0
+          self.frame=0
+          self.total_frame=0
 
-      def update(self):
+      def update(self,frame_time):
 
            global xpos,ypos
            for i in range(6):
@@ -106,8 +112,9 @@ class Tile():
                for i in range(10):
                    if map[j].mapnumber==i:
                         Tile.type[j]=self.TileType[i]
-           if timer%4==0:
-               self.time+=1
+           self.total_frame+=Tile.FRAMES_PER_ACTION*Tile.ACTION_PER_TIME*frame_time
+           self.frame=int(self.total_frame)%4
+
 
 
       def draw(self):
@@ -118,7 +125,7 @@ class Tile():
              if Tile.x[j][i]<chracter.state[0]+150 and Tile.x[j][i]>chracter.state[0]-150 \
                      and Tile.y[j][i]<chracter.state[1]+150 and Tile.y[j][i]>chracter.state[1]-150 and \
                  Tile.type[j][i]!=0 :
-              self.ring_image.clip_draw(62*(self.time%4),0,64,66,Tile.x[j][i],Tile.y[j][i])
+              self.ring_image.clip_draw(62*(self.frame%4),0,64,66,Tile.x[j][i],Tile.y[j][i])
           #self.ring_image.clip_draw(62*(self.time%4),0,64,66,mouse_x,mouse_y)
 
 class Stat():
@@ -318,6 +325,13 @@ def handle_events():
         if (event.type,event.button)==(SDL_MOUSEBUTTONDOWN,SDL_BUTTON_LEFT):
              mouse_x,mouse_y=event.x,599-event.y
 
+def get_frame_time():
+
+    global current_time
+
+    frame_time = get_time() - current_time
+    current_time += frame_time
+    return frame_time
 
 
 
@@ -337,6 +351,7 @@ def enter():
     global tiletype
     global turntype
     global turnnumber
+    global current_time
     turnnumber=1
     turntype=0
     tiletype=0
@@ -357,6 +372,8 @@ def enter():
     chracter=Chracter()
     move=Move()
     #map[0].mapononff=1
+    current_time = get_time()
+
 
 
 
@@ -391,10 +408,11 @@ def update():
     global chracter
     global tile
     global turntype
+    frame_time=get_frame_time()
     if pausenum==0:
         chracter.update()
         move.update()
-        tile.update()
+        tile.update(frame_time)
 
     global statbar
 
@@ -412,10 +430,11 @@ def draw():
     global statbar
     global statpng
     global timer
+    global map
+
 
     clear_canvas()
     handle_events()
-    global map
 
     for m in map:
          m.draw()

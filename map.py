@@ -162,8 +162,8 @@ class Stat():
             font.draw(800-40,600-220,"%d"%chracter.agi,color=(100,100,100))
             smallfont.draw(800-150,600-110,'Maxhp :')
             smallfont.draw(800-100,600-110,"%d"%chracter.hp,color=(200,0,0))
-        font.draw(800-410,600-20,"%d"%turnnumber,color=(150,100,100))
         font.draw(800-350,600-20,'Turn')
+        font.draw(800-410,600-20,"%d"%turnnumber,color=(150,100,100))
 
 
 class Move():

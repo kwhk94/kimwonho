@@ -137,8 +137,6 @@ class Stat():
     image=None
     blood=None
     armor=None
-
-
     def __init__(self):
         if Stat.image==None:
             Stat.image=load_image("png\\statbar.png")
@@ -147,6 +145,8 @@ class Stat():
         if Stat.armor==None:
             Stat.armor=load_image("png\\armor.png")
         self.onoff=0;
+
+
     def draw(self):
         if self.onoff==0:
             self.image.clip_draw(0,0,159,250,800-80,600-120)

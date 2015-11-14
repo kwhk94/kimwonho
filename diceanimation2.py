@@ -11,7 +11,7 @@ import map
 class Dice():
     image = None
     global battleturn
-    TIME_PER_ACTION=0.8
+    TIME_PER_ACTION=1
     ACTION_PER_TIME=1.0/TIME_PER_ACTION
     FRAMES_PER_ACTION=22
     ON,OFF=1,0
@@ -29,15 +29,16 @@ class Dice():
 
     def update(self):
          global battleturn
+         global turntime
+         global time_num
          self.time = get_time() - self.currenttime
          self.currenttime += self.time
          self.total_frame+=Dice.FRAMES_PER_ACTION*Dice.ACTION_PER_TIME*self.time
          if battleturn==2:
             self.frame=int(self.total_frame)%22
             if self.frame==21:
+                turntime=time_num
                 battleturn=3
-
-
 
     def draw(self):
          self.image.clip_draw(1+(self.frame)*140,283*(6-(self.number)),140,240,self.xpos,150)
@@ -85,9 +86,6 @@ class Stat():
     armor=None
     chracter=None
     global battletrun
-    TIME_PER_ACTION=0.8
-    ACTION_PER_TIME=1.0/TIME_PER_ACTION
-    FRAMES_PER_ACTION=22
 
     def __init__(self):
         if Stat.image==None:
@@ -109,19 +107,20 @@ class Stat():
 
     def update(self):
         global battleturn
-        self.time = get_time() - self.currenttime
-        self.currenttime += self.time
-        self.total_frame+=Stat.FRAMES_PER_ACTION*Stat.ACTION_PER_TIME*self.time
+        global turntime
         if battleturn==1 :
             for i in range(map.chracter.str):
                 if  dice_num[i]>=5:
-                    Stat.damage+=1
+                    stat.damage+=1
                 if i==map.chracter.str-1:
+                    turntime=time_num
                     battleturn=2
 
 
     def draw(self):
         global battleturn
+        global turntime
+        global time_num
         if self.onoff==0:
             self.image.clip_draw(0,0,159,250,800-80,600-120-355)
             self.blood.clip_draw(70*(map.chracter.hp-1),0,70,99,800-122,600-49-355)
@@ -137,11 +136,12 @@ class Stat():
             map.smallfont.draw(800-150,600-110-355,'Maxhp :')
             map.smallfont.draw(800-100,600-110-355,"%d"%map.chracter.hp,color=(200,0,0))
             self.chracter.clip_draw(0,0,89,119,800-200,600-200-355)
-            if battleturn>=3 :
-                map.font.draw(800-250,600-420,"%d"%Stat.damage,color=(100,100,100))
+            if battleturn>=3 and time_num-turntime>2:
+                map.font.draw(800-250,600-420,"%d"%stat.damage,color=(100,100,100))
                 map.font.draw(800-330,600-380,'Damage :',color=(100,100,100))
                 if battleturn==3:
-                    battleturn=4
+                    if time_num-turntime>4 :
+                        battleturn=4
 
 
 
@@ -153,6 +153,8 @@ def handle_events():
     global startdice
     global stat
     global battleturn
+    global turntime
+
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -173,6 +175,7 @@ def handle_events():
             if  battleturn==0 or 5:
                 num=0
                 stat.currentime=get_time()
+                turntime=time_num
                 for i in diceteam:
                     i.total_frame=0
                     i.currenttime=get_time()
@@ -212,6 +215,7 @@ class Enamy():
         global stat
         if battleturn==4:
             enamy.hp-=stat.damage
+            stat.damage=0
             battleturn=5
 
     def draw(self):
@@ -228,6 +232,10 @@ def enter():
     global stat
     global battleturn
     global e_stat
+    global time_num
+    global turntime
+    turntime=0
+    time_num=0
     e_stat=E_stat()
     stat=Stat()
     enamy=Enamy()
@@ -266,6 +274,9 @@ def update():
     global diceteam
     global stat
     global enamy
+    global time_num
+    frametime=get_frame_time()
+    time_num+=frametime
     for boy in diceteam:
            boy.update()
     stat.update()
@@ -277,10 +288,14 @@ def draw():
     global dice_num
     global enamy
     global diceteam
+    global time_num
+    global battleturn
     global e_stat
+    print("%f,%f"%(battleturn,stat.damage))
     clear_canvas()
-    for dice in diceteam:
-        dice.draw()
+    if battleturn>0:
+        for dice in diceteam:
+            dice.draw()
     enamy.draw()
     stat.draw()
     e_stat.draw()

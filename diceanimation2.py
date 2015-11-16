@@ -34,7 +34,7 @@ class Dice():
          self.time = get_time() - self.currenttime
          self.currenttime += self.time
          self.total_frame+=Dice.FRAMES_PER_ACTION*Dice.ACTION_PER_TIME*self.time
-         if battleturn==2:
+         if battleturn==2:  #주사위를 굴리는 단계
             self.frame=int(self.total_frame)%22
             if self.frame==21:
                 turntime=time_num
@@ -110,7 +110,7 @@ class Stat():
         global turntime
         if battleturn==1 :
             for i in range(map.chracter.str):
-                if  dice_num[i]>=5:
+                if  dice_num[i]>=5: #주사위 성공 체크 숫자
                     stat.damage+=1
                 if i==map.chracter.str-1:
                     turntime=time_num
@@ -121,27 +121,21 @@ class Stat():
         global battleturn
         global turntime
         global time_num
-        if self.onoff==0:
-            self.image.clip_draw(0,0,159,250,800-80,600-120-355)
-            self.blood.clip_draw(70*(map.chracter.hp-1),0,70,99,800-122,600-49-355)
-            self.armor.clip_draw(84*(map.chracter.df-1),0,84,99,800-50,600-49-355)
-            map.font.draw(800-150,600-130-355,'STR :')
-            map.font.draw(800-40,600-130-355,"%d"%map.chracter.str,color=(200,0,0))
-            map.font.draw(800-150,600-160-355,'LUK :')
-            map.font.draw(800-40,600-160-355,"%d"%map.chracter.luk,color=(0,200,0))
-            map.font.draw(800-150,600-190-355,'INT :')
-            map.font.draw(800-40,600-190-355,"%d"%map.chracter.int,color=(0,0,200))
-            map.font.draw(800-150,600-220-355,'AGI :')
-            map.font.draw(800-40,600-220-355,"%d"%map.chracter.agi,color=(100,100,100))
-            map.smallfont.draw(800-150,600-110-355,'Maxhp :')
-            map.smallfont.draw(800-100,600-110-355,"%d"%map.chracter.hp,color=(200,0,0))
-            self.chracter.clip_draw(0,0,89,119,800-200,600-200-355)
-            if battleturn>=3 and time_num-turntime>2:
-                map.font.draw(800-250,600-420,"%d"%stat.damage,color=(100,100,100))
-                map.font.draw(800-330,600-380,'Damage :',color=(100,100,100))
-                if battleturn==3:
-                    if time_num-turntime>4 :
-                        battleturn=4
+        self.image.clip_draw(0,0,159,250,800-80,600-120-355)
+        self.blood.clip_draw(70*(map.chracter.hp-1),0,70,99,800-122,600-49-355)
+        self.armor.clip_draw(84*(map.chracter.df-1),0,84,99,800-50,600-49-355)
+        map.font.draw(800-150,600-130-355,'STR :')
+        map.font.draw(800-40,600-130-355,"%d"%map.chracter.str,color=(200,0,0))
+        map.font.draw(800-150,600-160-355,'LUK :')
+        map.font.draw(800-40,600-160-355,"%d"%map.chracter.luk,color=(0,200,0))
+        map.font.draw(800-150,600-190-355,'INT :')
+        map.font.draw(800-40,600-190-355,"%d"%map.chracter.int,color=(0,0,200))
+        map.font.draw(800-150,600-220-355,'AGI :')
+        map.font.draw(800-40,600-220-355,"%d"%map.chracter.agi,color=(100,100,100))
+        map.smallfont.draw(800-150,600-110-355,'Maxhp :')
+        map.smallfont.draw(800-100,600-110-355,"%d"%map.chracter.hp,color=(200,0,0))
+        self.chracter.clip_draw(0,0,89,119,800-200,600-200-355)
+
 
 
 
@@ -172,7 +166,7 @@ def handle_events():
         elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_i):
                  stat.onoff= not stat.onoff
         elif event.type == SDL_KEYDOWN and event.key==SDLK_c:
-            if  battleturn==0 or 5:
+            if  battleturn==0 or battleturn==5:
                 num=0
                 stat.currentime=get_time()
                 turntime=time_num
@@ -188,9 +182,11 @@ def handle_events():
         elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_o):
              print(dice_num)
 
+
 class Enamy():
     image = None
     global xpos,ypos
+
 
     def __init__(self):
         Stat_file= open('etc\\Stat.txt','r')
@@ -205,21 +201,30 @@ class Enamy():
         Enamy.maxhp=Stat_data["HP"]
         Enamy.df=Stat_data["DF"]
         Enamy.str=Stat_data["STR"]
-        Enamy.agi=Stat_data["AGI"]
-        Enamy.luk=Stat_data["LUK"]
-        Enamy.int=Stat_data["INT"]
+        self.t_time=0
 
     def update(self):
         global battleturn
         global enamy
+        global turntime
         global stat
         if battleturn==4:
-            enamy.hp-=stat.damage
-            stat.damage=0
-            battleturn=5
+            if time_num-self.t_time>2: #2초씩 데미지계산
+                enamy.hp-=1
+                stat.damage-=1
+                self.t_time=time_num
+            if stat.damage==0:battleturn=5
 
     def draw(self):
-         Enamy.image[0].clip_draw(0,0,400,300,200,450);
+        global battleturn
+        Enamy.image[0].clip_draw(0,0,400,300,200,450);
+        if battleturn>=3 and time_num-turntime>1: #일정시간이 지난후 데미지계산
+                map.font.draw(800-250,600-420,"%d"%stat.damage,color=(100,100,100))
+                map.font.draw(800-330,600-380,'Damage :',color=(100,100,100))
+                if battleturn==3:
+                    if time_num-turntime>2 :
+                        battleturn=4
+                        self.t_time=turntime
 
 
 

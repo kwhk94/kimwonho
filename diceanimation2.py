@@ -210,9 +210,10 @@ class Enamy():
         global stat
         if battleturn==4:
             if time_num-self.t_time>2: #2초씩 데미지계산
-                enamy.hp-=1
-                stat.damage-=1
-                self.t_time=time_num
+                if stat.damage>0:
+                    enamy.hp-=1
+                    stat.damage-=1
+                    self.t_time=time_num
             if stat.damage==0:battleturn=5
 
     def draw(self):
@@ -296,7 +297,7 @@ def draw():
     global time_num
     global battleturn
     global e_stat
-    print("%f,%f"%(battleturn,stat.damage))
+    #print("%f,%f"%(battleturn,stat.damage))
     clear_canvas()
     if battleturn>0:
         for dice in diceteam:

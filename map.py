@@ -229,6 +229,7 @@ class Chracter():
         Chracter.agi=Stat_data["AGI"]
         Chracter.luk=Stat_data["LUK"]
         Chracter.int=Stat_data["INT"]
+        Chracter.type=1
 
 
     def update(self):
@@ -246,13 +247,16 @@ class Chracter():
              if tile.x[j][i]<chracter.state[0]+150 and tile.x[j][i]>chracter.state[0]-150 \
                      and tile.y[j][i]<chracter.state[1]+150 and tile.y[j][i]>chracter.state[1]-150 \
                      and Tile.type[j][i]!=0 and turntype==0:#캐릭터의 주위 타일
-                 if mouse_x<tile.x[j][i]+25 and mouse_x>tile.x[j][i]-25 and mouse_y< tile.y[j][i]+25 and mouse_y>tile.y[j][i]-25 :
-                    Chracter.Chracter_x+= tile.x[j][i]-Chracter.state[0]
-                    Chracter.Chracter_y+=  tile.y[j][i]-Chracter.state[1]
-                    mouse_x=-1000         #마우스위치를 유지시키면 화면이 움직일시 마우스 클릭위치에따라 이벤트가 중복 발생할수있다
-                    mouse_y=-1000
-                    tiletype=Tile.type[j][i]
-                    turntype=1
+                 if not( tile.x[j][i]+20>chracter.state[0] and tile.x[j][i]-20<chracter.state[0] and tile.y[j][i]+20>chracter.state[1]
+                         and tile.y[j][i]-20<chracter.state[1] ):
+                    if mouse_x<tile.x[j][i]+25 and mouse_x>tile.x[j][i]-25 and mouse_y< tile.y[j][i]+25 and mouse_y>tile.y[j][i]-25 :
+                        Chracter.Chracter_x+= tile.x[j][i]-Chracter.state[0]
+                        Chracter.Chracter_y+=  tile.y[j][i]-Chracter.state[1]
+                        Chracter.type=Tile.type[j][i] #캐릭터 위치타일의 타입을 입력
+                        mouse_x=-1000         #마우스위치를 유지시키면 화면이 움직일시 마우스 클릭위치에따라 이벤트가 중복 발생할수있다
+                        mouse_y=-1000
+                        tiletype=Tile.type[j][i]
+                        turntype=1
                  if map[j].maponoff==OFF:
                     map[j].maponoff=ON;
                     map[j].mapnumber=random.randint(2,9)
@@ -285,6 +289,7 @@ def handle_events():
     global dice_num
     global tiletype
     global turntype
+    global turnnumber
 
     Stop,Right,Left,UP,DOWN=0,1,2,3,4
     events = get_events()
@@ -295,8 +300,12 @@ def handle_events():
             if(event.type,event.key)==(SDL_KEYDOWN,SDLK_ESCAPE):
                 game_framework.quit()
             elif (event.type,event.key)==(SDL_KEYDOWN,SDLK_SPACE):
-                if turntype==1:
+                if turntype==1 and Chracter.type==2:
                  changemap()
+                else :
+                    if turntype!=0:
+                        turnnumber+=1
+                    turntype=0
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_a):
                  game_framework.push_state(diceanimation2)
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_RIGHT):

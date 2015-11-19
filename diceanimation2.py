@@ -186,21 +186,30 @@ def handle_events():
 class Enamy():
     image = None
     global xpos,ypos
+    global Stat_data
+    Stat_file= open('etc\\enamy.txt','r')
+    Stat_data=json.load(Stat_file)
+    Stat_file.close()
+    hplist=Stat_data["hplist"]
+    dflist=Stat_data["dflist"]
+    strlist=Stat_data["strlist"]
+
+
+
+
 
 
     def __init__(self):
-        Stat_file= open('etc\\Stat.txt','r')
-        Stat_data=json.load(Stat_file)
-        Stat_file.close()
         if Enamy.image==None:
             Enamy.image=[load_image('png\\mon-1.png'),load_image('png\\mon-2.png'),
                          load_image('png\\mon-3.png'),load_image('png\\mon-4.png')]
         self.number=random.randint(0,3)
         Enamy.Chracter_x, Enamy.Chracter_y=0,0
-        Enamy.hp=Stat_data["Enamy"]["guardsman"]["hp"]
-        Enamy.maxhp=Stat_data["HP"]
-        Enamy.df=Stat_data["DF"]
-        Enamy.str=Stat_data["STR"]
+        Enamy.hp=self.hplist[ self.number]
+        Enamy.df=self.dflist[ self.number]
+        Enamy.str=self.strlist[ self.number]
+
+
         self.t_time=0
 
     def update(self):
@@ -218,7 +227,7 @@ class Enamy():
 
     def draw(self):
         global battleturn
-        Enamy.image[0].clip_draw(0,0,400,300,200,450);
+        Enamy.image[self.number].clip_draw(0,0,400,300,200,450);
         if battleturn>=3 and time_num-turntime>1: #일정시간이 지난후 데미지계산
                 map.font.draw(800-250,600-420,"%d"%stat.damage,color=(100,100,100))
                 map.font.draw(800-330,600-380,'Damage :',color=(100,100,100))

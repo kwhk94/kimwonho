@@ -1,0 +1,16 @@
+{
+ "guardsmen":{ "str": 5, "hp" : 3,"df":3  },
+ "redmonk":{"str":7, "hp":4 , "df":2},
+ "crossbowmen":{"str":6,"hp":4,"df":4},
+ "peasant":{"str":4,"hp":2,"df":3},
+ "4":{"str":3,"hp":3,"df":2},
+ "5":{"str":7,"hp":3,"df":4},
+ "hplist":[3,4,4,2,3,3],
+ "dflist":[3,2,4,3,2,4],
+ "strlist":[5,7,6,4,3,7]
+
+
+
+
+
+}

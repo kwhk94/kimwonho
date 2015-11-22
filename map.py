@@ -60,6 +60,10 @@ class Map():
             self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][4]+xpos,etc["mapy"][4]+ypos)
         elif self.number==5:
             self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][5]+xpos,etc["mapy"][5]+ypos)
+        elif self.number==6:
+            self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][6]+xpos,etc["mapy"][6]+ypos)
+        elif self.number==7:
+            self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][7]+xpos,etc["mapy"][7]+ypos)
 
 class Tile():
       global xpos,ypos
@@ -89,10 +93,10 @@ class Tile():
 
       def __init__(self):
           if Tile.x==[]:
-            for i in range(6):
+            for i in range(8):
                     Tile.x.append([etc["mapx"][i]+etc["tilexsize"][j]+xpos for j in range(7)])
           if Tile.y==[]:
-             for i in range(6):
+             for i in range(8):
                     Tile.y.append([etc["mapy"][i]+etc["tileysize"][j]+ypos for j in range(7)])
           Tile.type=[self.TileType[i] for i in range(10)]
           if Tile.ring_image==None:
@@ -103,12 +107,12 @@ class Tile():
       def update(self,frame_time):
 
            global xpos,ypos
-           for i in range(6):
+           for i in range(8):
               for j in range(7):
                   Tile.x[i][j]=etc["mapx"][i]+etc["tilexsize"][j]+xpos
                   Tile.y[i][j]=etc["mapy"][i]+etc["tileysize"][j]+ypos
 
-           for j in range(6):
+           for j in range(8):
                for i in range(10):
                    if map[j].mapnumber==i:
                         Tile.type[j]=self.TileType[i]
@@ -120,13 +124,23 @@ class Tile():
       def draw(self):
           global chracter
           global mouse_x,mouse_y
-          for j in range(6):
+          for j in range(8):
            for i in range(7):
              if Tile.x[j][i]<chracter.state[0]+150 and Tile.x[j][i]>chracter.state[0]-150 \
                      and Tile.y[j][i]<chracter.state[1]+150 and Tile.y[j][i]>chracter.state[1]-150 and \
                  Tile.type[j][i]!=0 :
               self.ring_image.clip_draw(62*(self.frame%4),0,64,66,Tile.x[j][i],Tile.y[j][i])
           #self.ring_image.clip_draw(62*(self.time%4),0,64,66,mouse_x,mouse_y)
+
+
+class Music():
+    bgm=None
+    def __init__(self):
+        if self.bgm==None:
+            self.bgm=load_music('etc\\bgm.ogg')
+            self.bgm.set_volume(12)
+            self.bgm.repeat_play()
+
 
 class Stat():
     global statpng
@@ -242,7 +256,7 @@ class Chracter():
         global timer
         ON,OFF=1,0
         Chracter.state=[200+xpos+ Chracter.Chracter_x,50+ypos+Chracter.Chracter_y]
-        for j in range(6):
+        for j in range(8):
            for i in range(7):
              if tile.x[j][i]<chracter.state[0]+150 and tile.x[j][i]>chracter.state[0]-150 \
                      and tile.y[j][i]<chracter.state[1]+150 and tile.y[j][i]>chracter.state[1]-150 \
@@ -290,6 +304,8 @@ def handle_events():
     global tiletype
     global turntype
     global turnnumber
+    global statonoff
+    global actionnumber
 
     Stop,Right,Left,UP,DOWN=0,1,2,3,4
     events = get_events()
@@ -302,6 +318,9 @@ def handle_events():
             elif (event.type,event.key)==(SDL_KEYDOWN,SDLK_SPACE):
                 if turntype==1 and Chracter.type==2:
                  changemap()
+                elif turntype==1 and Chracter.type==1:
+                    statonoff=stat.onoff
+                    turntype=2
                 else :
                     if turntype!=0:
                         turnnumber+=1
@@ -327,12 +346,35 @@ def handle_events():
                 elif pausenum==0:pausenum=1
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_o):
                  print(diceanimation2.dice_num)
-            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_i):
+            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_i) and turntype!=2:
                  stat.onoff= not stat.onoff
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_q):
                  print(chracter.hp)
         if (event.type,event.button)==(SDL_MOUSEBUTTONDOWN,SDL_BUTTON_LEFT):
              mouse_x,mouse_y=event.x,599-event.y
+             if turntype==2:
+                  actionnumber=click_card()
+                  result(actionnumber)
+
+def result(num):
+    global turntype
+    if num>=0 and num<80:
+        turntype=0
+        return 0
+    elif num>=80 and num<90:
+        if chracter.hp<chracter.maxhp:
+            turntype=0
+            chracter.hp+=1
+            return 1
+    else :
+        turntype=0
+        chracter.hp-=1
+        return 2
+def resultdraw(num):
+    if num==0:
+        pass
+
+
 
 def get_frame_time():
 
@@ -342,6 +384,28 @@ def get_frame_time():
     current_time += frame_time
     return frame_time
 
+def click_card():
+    global mouse_x,mouse_y
+    num=[0,0,0]
+    for i in num :
+        num[i]=random.randint(0,100)
+    stat.onoff=statonoff
+    if mouse_x>50 and mouse_x<250 and mouse_y>200 and mouse_y<500 :
+        mouse_x,mouse_y=-100,-100
+        print(num[0])
+        return num[0]
+    elif mouse_x>300 and mouse_x<500 and mouse_y>200 and mouse_y<500 :
+        mouse_x,mouse_y=-100,-100
+        return num[1]
+    elif mouse_x>550 and mouse_x<750 and mouse_y>200 and mouse_y<500 :
+        mouse_x,mouse_y=-100,-100
+        return num[2]
+
+def drawcard():
+    stat.onoff=1
+    draw_rectangle(50,200,250,500)
+    draw_rectangle(300,200,500,500)
+    draw_rectangle(550,200,750,500)
 
 
 
@@ -356,21 +420,25 @@ def enter():
     global stat
     global font
     global smallfont
+    global bigfont
     global timer
     global tiletype
     global turntype
     global turnnumber
     global current_time
+    global bgm
+    bgm=Music()
     turnnumber=1
     turntype=0
     tiletype=0
     timer=0
     font=load_font('etc\\font.ttf',30)
     smallfont=load_font('etc\\font.ttf',10)
+    bigfont=load_font('etc\\font.ttf',50)
     stat=Stat()
     pausenum=0
     countumber=0
-    map =[Map() for i in range(6)]
+    map =[Map() for i in range(8)]
     for i in map:
         i.number=countumber
         countumber=countumber+1
@@ -423,9 +491,9 @@ def update():
         move.update()
         tile.update(frame_time)
 
+
+
     global statbar
-
-
 
 
 
@@ -440,6 +508,8 @@ def draw():
     global statpng
     global timer
     global map
+    global bigfont
+    global turntype
 
 
     clear_canvas()
@@ -453,6 +523,10 @@ def draw():
     chracter.draw()
     stat.draw()
     timer+=1
+    if turntype==1:
+         bigfont.draw(200,100,"PRESS SPACE!",color=(230,0,0))
+    if turntype==2:
+        drawcard()
     delay(0.01)
 
 

@@ -193,7 +193,8 @@ class Enamy():
     hplist=Stat_data["hplist"]
     dflist=Stat_data["dflist"]
     strlist=Stat_data["strlist"]
-
+    blood=None
+    armor=None
 
 
 
@@ -204,6 +205,10 @@ class Enamy():
             Enamy.image=[load_image('png\\mon-1.png'),load_image('png\\mon-2.png'),
                          load_image('png\\mon-3.png'),load_image('png\\mon-4.png')]
         self.number=random.randint(0,3)
+        if Enamy.blood==None:
+            Enamy.blood=load_image("png\\Blood.png")
+        if Enamy.armor==None:
+            Enamy.armor=load_image("png\\armor.png")
         Enamy.Chracter_x, Enamy.Chracter_y=0,0
         Enamy.hp=self.hplist[ self.number]
         Enamy.df=self.dflist[ self.number]
@@ -220,14 +225,20 @@ class Enamy():
         if battleturn==4:
             if time_num-self.t_time>2: #2초씩 데미지계산
                 if stat.damage>0:
-                    enamy.hp-=1
+                    if enamy.df>0:
+                        enamy.df-=1
+                    else : enamy.hp-=1
                     stat.damage-=1
                     self.t_time=time_num
-            if stat.damage==0:battleturn=5
+            if stat.damage==0:
+                enamy.df=self.dflist[ self.number]
+                battleturn=5
 
     def draw(self):
         global battleturn
         Enamy.image[self.number].clip_draw(0,0,400,300,200,450);
+        enamy.blood.clip_draw(70*(enamy.hp-1),0,70,99,800-440,600-140)
+        enamy.armor.clip_draw(84*(enamy.df-1),0,84,99,800-440,600-240)
         if battleturn>=3 and time_num-turntime>1: #일정시간이 지난후 데미지계산
                 map.font.draw(800-250,600-420,"%d"%stat.damage,color=(100,100,100))
                 map.font.draw(800-330,600-380,'Damage :',color=(100,100,100))

@@ -175,7 +175,7 @@ class Stat():
             font.draw(800-150,600-220,'AGI :')
             font.draw(800-40,600-220,"%d"%chracter.agi,color=(100,100,100))
             smallfont.draw(800-150,600-110,'Maxhp :')
-            smallfont.draw(800-100,600-110,"%d"%chracter.hp,color=(200,0,0))
+            smallfont.draw(800-100,600-110,"%d"%chracter.maxhp,color=(200,0,0))
         font.draw(800-350,600-20,'Turn')
         font.draw(800-410,600-20,"%d"%turnnumber,color=(150,100,100))
 
@@ -282,6 +282,24 @@ class Chracter():
          global turntype
          self.image.clip_draw(0,0,89,119,Chracter.state[0],Chracter.state[1])
 
+class Card():
+    image=None
+    result=None
+    def __init__(self):
+        if self.image==None:
+            self.image=[load_image('png\\card1.png'),
+                        load_image('png\\card2.png'),
+                        load_image('png\\card3.png'),
+                        load_image('png\\card4.png'),
+                        load_image('png\\card5.png'),
+                        load_image('png\\card6.png'),
+                        load_image('png\\card7.png')]
+        if self.result==None:
+            self.result=[load_image('png\\result.png'),
+                         load_image('png\\result 2.png'),
+                         load_image('png\\result 3.bmp')]
+
+
 
 def changemap():
     global turntype
@@ -306,6 +324,7 @@ def handle_events():
     global turnnumber
     global statonoff
     global actionnumber
+    global cardnumber
 
     Stop,Right,Left,UP,DOWN=0,1,2,3,4
     events = get_events()
@@ -320,7 +339,10 @@ def handle_events():
                  changemap()
                 elif turntype==1 and Chracter.type==1:
                     statonoff=stat.onoff
+                    cardnumber=random.randint(0,100);
                     turntype=2
+                elif turntype==3 and Chracter.type==1:
+                    turntype=4
                 else :
                     if turntype!=0:
                         turnnumber+=1
@@ -354,14 +376,15 @@ def handle_events():
              mouse_x,mouse_y=event.x,599-event.y
              if turntype==2:
                   actionnumber=click_card()
-                  result(actionnumber)
+
+
 
 def result(num):
     global turntype
     if num>=0 and num<80:
         turntype=0
         return 0
-    elif num>=80 and num<90:
+    elif num>=70 and num<90:
         if chracter.hp<chracter.maxhp:
             turntype=0
             chracter.hp+=1
@@ -370,9 +393,32 @@ def result(num):
         turntype=0
         chracter.hp-=1
         return 2
-def resultdraw(num):
-    if num==0:
-        pass
+
+
+
+
+def click_card():
+    global mouse_x,mouse_y
+    global turntype
+    num=[0,0,0]
+    for i in num :
+        num[i]=random.randint(0,100)
+    stat.onoff=statonoff
+    if mouse_x>50 and mouse_x<250 and mouse_y>200 and mouse_y<500 :
+        mouse_x,mouse_y=-100,-100
+        print(num[0])
+        turntype=3
+        return num[0]
+    elif mouse_x>300 and mouse_x<500 and mouse_y>200 and mouse_y<500 :
+        mouse_x,mouse_y=-100,-100
+        turntype=3
+        return num[1]
+    elif mouse_x>550 and mouse_x<750 and mouse_y>200 and mouse_y<500 :
+        mouse_x,mouse_y=-100,-100
+        turntype=3
+        return num[2]
+
+
 
 
 
@@ -384,29 +430,24 @@ def get_frame_time():
     current_time += frame_time
     return frame_time
 
-def click_card():
-    global mouse_x,mouse_y
-    num=[0,0,0]
-    for i in num :
-        num[i]=random.randint(0,100)
-    stat.onoff=statonoff
-    if mouse_x>50 and mouse_x<250 and mouse_y>200 and mouse_y<500 :
-        mouse_x,mouse_y=-100,-100
-        print(num[0])
-        return num[0]
-    elif mouse_x>300 and mouse_x<500 and mouse_y>200 and mouse_y<500 :
-        mouse_x,mouse_y=-100,-100
-        return num[1]
-    elif mouse_x>550 and mouse_x<750 and mouse_y>200 and mouse_y<500 :
-        mouse_x,mouse_y=-100,-100
-        return num[2]
+def drawcard(num):
+    global cardnumber
+    global turntype
+    if turntype==2:
+        stat.onoff=1
+        card.image[cardnumber%7].clip_draw(0,0,200,300,150,350) #draw_rectangle(50,200,250,500)
+        card.image[(cardnumber+1)%7].clip_draw(0,0,200,300,400,350)#draw_rectangle(300,200,500,500)
+        card.image[(cardnumber+2)%7].clip_draw(0,0,200,300,650,350)#draw_rectangle(550,200,750,500)
+    if turntype==3:
+        if num<80:
+            card.result[0].clip_draw(0,0,266,399,150,350)
+        elif num>=70 and num<90:
+             card.result[1].clip_draw(0,0,266,399,150,350)
+        else :
+             card.result[2].clip_draw(0,0,266,399,150,350)
 
-def drawcard():
-    stat.onoff=1
-    draw_rectangle(50,200,250,500)
-    draw_rectangle(300,200,500,500)
-    draw_rectangle(550,200,750,500)
-
+    if turntype==4:
+         result(actionnumber)
 
 
 def enter():
@@ -427,6 +468,9 @@ def enter():
     global turnnumber
     global current_time
     global bgm
+    global card, actionnumber
+    actionnumber=0
+    card=Card()
     bgm=Music()
     turnnumber=1
     turntype=0
@@ -510,6 +554,7 @@ def draw():
     global map
     global bigfont
     global turntype
+    global actionnumber
 
 
     clear_canvas()
@@ -525,8 +570,7 @@ def draw():
     timer+=1
     if turntype==1:
          bigfont.draw(200,100,"PRESS SPACE!",color=(230,0,0))
-    if turntype==2:
-        drawcard()
+    drawcard(actionnumber)
     delay(0.01)
 
 

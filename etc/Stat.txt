@@ -2,7 +2,7 @@
     "HP":3, "DF":2,
     "STR":5,"AGI":2,
     "LUK":3,
-    "INT":2,
+    "Gold":0,
     "Enamy":{  "guardsman":{ "str": 1, "hp" : 3  }   }
 
 	

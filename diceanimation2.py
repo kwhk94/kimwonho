@@ -128,8 +128,8 @@ class Stat():
         map.font.draw(800-40,600-130-355,"%d"%map.chracter.str,color=(200,0,0))
         map.font.draw(800-150,600-160-355,'LUK :')
         map.font.draw(800-40,600-160-355,"%d"%map.chracter.luk,color=(0,200,0))
-        map.font.draw(800-150,600-190-355,'INT :')
-        map.font.draw(800-40,600-190-355,"%d"%map.chracter.int,color=(0,0,200))
+        map.font.draw(800-150,600-190-355,'Gold :')
+        map.font.draw(800-40,600-190-355,"%d"%map.chracter.gold,color=(0,0,200))
         map.font.draw(800-150,600-220-355,'AGI :')
         map.font.draw(800-40,600-220-355,"%d"%map.chracter.agi,color=(100,100,100))
         map.smallfont.draw(800-150,600-110-355,'Maxhp :')
@@ -190,29 +190,28 @@ class Enamy():
     Stat_file= open('etc\\enamy.txt','r')
     Stat_data=json.load(Stat_file)
     Stat_file.close()
-    hplist=Stat_data["hplist"]
-    dflist=Stat_data["dflist"]
-    strlist=Stat_data["strlist"]
+
     blood=None
     armor=None
-
-
-
-
 
     def __init__(self):
         if Enamy.image==None:
             Enamy.image=[load_image('png\\mon-1.png'),load_image('png\\mon-2.png'),
                          load_image('png\\mon-3.png'),load_image('png\\mon-4.png')]
         self.number=random.randint(0,3)
+        self.hplist=Stat_data["hplist"]
+        self.dflist=Stat_data["dflist"]
+        self.strlist=Stat_data["strlist"]
         if Enamy.blood==None:
             Enamy.blood=load_image("png\\Blood.png")
         if Enamy.armor==None:
             Enamy.armor=load_image("png\\armor.png")
         Enamy.Chracter_x, Enamy.Chracter_y=0,0
-        Enamy.hp=self.hplist[ self.number]
-        Enamy.df=self.dflist[ self.number]
-        Enamy.str=self.strlist[ self.number]
+        Enamy.hp=self.hplist[ self.number]-1+(int)(map.turnnumber/100)#적군 벨런스 조정
+        Enamy.df=self.dflist[ self.number]-1+(int)(map.turnnumber/100)
+        Enamy.str=self.strlist[ self.number]-1+(int)(map.turnnumber/100)
+        Enamy.maxdf=self.dflist[ self.number]-1+(int)(map.turnnumber/100)
+
 
 
         self.t_time=0
@@ -230,15 +229,15 @@ class Enamy():
                     else : enamy.hp-=1
                     stat.damage-=1
                     self.t_time=time_num
-            if stat.damage==0:
-                enamy.df=self.dflist[ self.number]
-                battleturn=5
+                elif stat.damage==0:
+                    enamy.df=enamy.maxdf
+                    battleturn=5
 
     def draw(self):
         global battleturn
         Enamy.image[self.number].clip_draw(0,0,400,300,200,450);
         enamy.blood.clip_draw(70*(enamy.hp-1),0,70,99,800-440,600-140)
-        enamy.armor.clip_draw(84*(enamy.df-1),0,84,99,800-440,600-240)
+        enamy.armor.clip_draw(84*(enamy.maxdf-1),0,84,99,800-440,600-240)
         if battleturn>=3 and time_num-turntime>1: #일정시간이 지난후 데미지계산
                 map.font.draw(800-250,600-420,"%d"%stat.damage,color=(100,100,100))
                 map.font.draw(800-330,600-380,'Damage :',color=(100,100,100))
@@ -274,8 +273,9 @@ def enter():
 
 def exit():
     global diceteam
+    global enamy
     del(diceteam)
-
+    del(enamy)
 
 def pause():
     global dice_num

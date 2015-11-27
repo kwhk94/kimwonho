@@ -138,7 +138,7 @@ class Music():
     def __init__(self):
         if self.bgm==None:
             self.bgm=load_music('etc\\bgm.ogg')
-            self.bgm.set_volume(12)
+            self.bgm.set_volume(6)
             self.bgm.repeat_play()
 
 
@@ -170,8 +170,8 @@ class Stat():
             font.draw(800-40,600-130,"%d"%chracter.str,color=(200,0,0))
             font.draw(800-150,600-160,'LUK :')
             font.draw(800-40,600-160,"%d"%chracter.luk,color=(0,200,0))
-            font.draw(800-150,600-190,'INT :')
-            font.draw(800-40,600-190,"%d"%chracter.int,color=(0,0,200))
+            font.draw(800-150,600-190,'Gold')
+            font.draw(800-40,600-190,"%d"%chracter.gold,color=(200,200,0))
             font.draw(800-150,600-220,'AGI :')
             font.draw(800-40,600-220,"%d"%chracter.agi,color=(100,100,100))
             smallfont.draw(800-150,600-110,'Maxhp :')
@@ -242,7 +242,7 @@ class Chracter():
         Chracter.str=Stat_data["STR"]
         Chracter.agi=Stat_data["AGI"]
         Chracter.luk=Stat_data["LUK"]
-        Chracter.int=Stat_data["INT"]
+        Chracter.gold=Stat_data["Gold"]
         Chracter.type=1
 
 
@@ -341,6 +341,8 @@ def handle_events():
                     statonoff=stat.onoff
                     cardnumber=random.randint(0,100);
                     turntype=2
+                elif turntype==2 and Chracter.type==1:
+                    pass
                 elif turntype==3 and Chracter.type==1:
                     turntype=4
                 else :

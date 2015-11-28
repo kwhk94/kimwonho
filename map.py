@@ -1,7 +1,7 @@
 __author__ = 'kkk'
 from pico2d import*
 import game_framework
-import diceanimation2
+import battlemap
 import title
 import json
 import random
@@ -304,7 +304,7 @@ class Card():
 def changemap():
     global turntype
     global mouse_x,mouse_y
-    game_framework.push_state(diceanimation2)
+    game_framework.push_state(battlemap)
     turntype=0
     mouse_x,mouse_y=-1000,-1000   #마우스위치를 유지시키면 화면이 돌아올때 이벤트가중복발생된다
 
@@ -350,7 +350,7 @@ def handle_events():
                         turnnumber+=1
                     turntype=0
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_a):
-                 game_framework.push_state(diceanimation2)
+                 game_framework.push_state(battlemap)
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_RIGHT):
                 if move.state==move.stop :
                     move.state=move.rightmove
@@ -369,7 +369,7 @@ def handle_events():
                 if pausenum==1: pausenum=0
                 elif pausenum==0:pausenum=1
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_o):
-                 print(diceanimation2.dice_num)
+                 print(battlemap.dice_num)
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_i) and turntype!=2:
                  stat.onoff= not stat.onoff
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_q):

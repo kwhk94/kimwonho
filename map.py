@@ -7,6 +7,7 @@ import json
 import random
 global dice_num
 global font
+import gameover
 
 class Dice():
     def __init__(self):
@@ -138,7 +139,7 @@ class Music():
     def __init__(self):
         if self.bgm==None:
             self.bgm=load_music('etc\\bgm.ogg')
-            self.bgm.set_volume(6)
+            self.bgm.set_volume(12)
             self.bgm.repeat_play()
 
 
@@ -239,6 +240,7 @@ class Chracter():
         Chracter.hp=Stat_data["HP"]
         Chracter.maxhp=Stat_data["HP"]
         Chracter.df=Stat_data["DF"]
+        Chracter.maxdf=Stat_data["DF"]
         Chracter.str=Stat_data["STR"]
         Chracter.agi=Stat_data["AGI"]
         Chracter.luk=Stat_data["LUK"]
@@ -382,7 +384,8 @@ def handle_events():
 
 
 def result(num):
-    global turntype
+    global turntype,turnnumber
+    turnnumber+=1
     if num>=0 and num<80:
         turntype=0
         return 0
@@ -573,6 +576,8 @@ def draw():
     if turntype==1:
          bigfont.draw(200,100,"PRESS SPACE!",color=(230,0,0))
     drawcard(actionnumber)
+    if chracter.hp==0:
+        game_framework.push_state(gameover)
     delay(0.01)
 
 

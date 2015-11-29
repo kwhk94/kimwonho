@@ -27,7 +27,8 @@ class E_stat():
             E_stat.blood=load_image("png\\Blood.png")
         if E_stat.armor==None:
             E_stat.armor=load_image("png\\armor.png")
-        self.onoff=0;
+        self.onoff=0
+        self.damage=0
 
 
     def draw(self):

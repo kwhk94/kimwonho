@@ -36,6 +36,7 @@ class Enamy():
             Enamy.armor=load_image("png\\armor.png")
         Enamy.Chracter_x, Enamy.Chracter_y=0,0
         Enamy.hp=self.hplist[ self.number]-1+(int)(map.turnnumber/100)#적군 벨런스 조정
+        Enamy.maxhp=self.hplist[ self.number]-1+(int)(map.turnnumber/100)#적군 벨런스 조정
         Enamy.df=self.dflist[ self.number]-1+(int)(map.turnnumber/100)
         Enamy.str=self.strlist[ self.number]-1+(int)(map.turnnumber/100)
         Enamy.maxdf=self.dflist[ self.number]-1+(int)(map.turnnumber/100)

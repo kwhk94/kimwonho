@@ -21,6 +21,7 @@ class Enamy():
 
     blood=None
     armor=None
+    str=None
 
     def __init__(self):
         if Enamy.image==None:
@@ -34,6 +35,8 @@ class Enamy():
             Enamy.blood=load_image("png\\Blood.png")
         if Enamy.armor==None:
             Enamy.armor=load_image("png\\armor.png")
+        #if Enamy.str==None:
+         #   Enamy.str=load_image("png\\armor.png")
         Enamy.Chracter_x, Enamy.Chracter_y=0,0
         Enamy.hp=self.hplist[ self.number]-1+(int)(map.turnnumber/100)#적군 벨런스 조정
         Enamy.maxhp=self.hplist[ self.number]-1+(int)(map.turnnumber/100)#적군 벨런스 조정
@@ -44,5 +47,6 @@ class Enamy():
     def draw(self):
         global battleturn
         Enamy.image[self.number].clip_draw(0,0,400,300,200,450);
-        Enamy.blood.clip_draw(70*(Enamy.hp-1),0,70,99,800-440,600-140)
-        Enamy.armor.clip_draw(84*(Enamy.maxdf-1),0,84,99,800-440,600-240)
+        Enamy.blood.clip_draw(70*(Enamy.maxhp-1),0,70,99,800-437,600-144)
+        Enamy.armor.clip_draw(84*(Enamy.maxdf-1),0,84,99,800-447,600-240)
+       # Enamy.str.clip_draw(84*(Enamy.maxdf-1),0,84,99,800-447,600-240)

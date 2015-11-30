@@ -8,6 +8,12 @@ import random
 global dice_num
 global font
 import gameover
+import mapclass
+from Tileclass import Tile as Tile
+from Tileclass import Move as Move
+
+global xpos,ypos
+xpos,ypos=0,0
 
 class Dice():
     def __init__(self):
@@ -21,117 +27,8 @@ class Dice():
     def draw(self):
          self.image.clip_draw((self.frame)*140,283*self.frameyy,140,240,self.xpos,300)
 
-global xpos,ypos
-xpos,ypos=0,0
-
-class Map():
-    image = None
-    maponoff=None
-    global xpos,ypos
-    global etc
-    etc_file= open('etc\\etc.txt','r')
-    etc=json.load(etc_file)
-    etc_file.close()
-
-    def __init__(self):
-        if Map.image==None:
-            Map.image=[load_image('png\\realmap (12).png'),load_image('png\\realmap (8).png'),
-                       load_image('png\\realmap (1).png'),load_image('png\\realmap (2).png'),
-                       load_image('png\\realmap (3).png'),load_image('png\\realmap (4).png'),
-                       load_image('png\\realmap (5).png'),load_image('png\\realmap (6).png'),
-                       load_image('png\\realmap (7).png'),load_image('png\\realmap (9).png')]
-        self.number=0
-        self.mapnumber=1
-        if Map.maponoff==None:
-            Map.maponoff=0
 
 
-
-    def draw(self):
-        global xpos,ypos
-        if self.number==0:
-          self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][0]+xpos,etc["mapy"][0]+ypos)
-        elif self.number==1:
-            self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][1]+xpos,etc["mapy"][1]+ypos)
-        elif self.number==2:
-            self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][2]+xpos,etc["mapy"][2]+ypos)
-        elif self.number==3:
-            self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][3]+xpos,etc["mapy"][3]+ypos)
-        elif self.number==4:
-            self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][4]+xpos,etc["mapy"][4]+ypos)
-        elif self.number==5:
-            self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][5]+xpos,etc["mapy"][5]+ypos)
-        elif self.number==6:
-            self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][6]+xpos,etc["mapy"][6]+ypos)
-        elif self.number==7:
-            self.image[self.mapnumber].clip_draw(0,0,400,385,etc["mapx"][7]+xpos,etc["mapy"][7]+ypos)
-
-class Tile():
-      global xpos,ypos
-      x,y=[],[]
-      global etc_file
-      global timer
-      ring_image=None
-      etc_file= open('etc\\etc.txt','r')
-      etc=json.load(etc_file)
-      etc_file.close()
-      TileType={
-          0:etc["TileType"]["0"],
-          1:etc["TileType"]["1"],
-          2:etc["TileType"]["2"],
-          3:etc["TileType"]["3"],
-          4:etc["TileType"]["4"],
-          5:etc["TileType"]["5"],
-          6:etc["TileType"]["6"],
-          7:etc["TileType"]["7"],
-          8:etc["TileType"]["8"],
-          9:etc["TileType"]["9"]
-      }
-      TIME_PER_ACTION=0.5
-      ACTION_PER_TIME=1.0/TIME_PER_ACTION
-      FRAMES_PER_ACTION=4
-
-
-      def __init__(self):
-          if Tile.x==[]:
-            for i in range(8):
-                    Tile.x.append([etc["mapx"][i]+etc["tilexsize"][j]+xpos for j in range(7)])
-          if Tile.y==[]:
-             for i in range(8):
-                    Tile.y.append([etc["mapy"][i]+etc["tileysize"][j]+ypos for j in range(7)])
-          Tile.type=[self.TileType[i] for i in range(10)]
-          if Tile.ring_image==None:
-                Tile.ring_image=load_image('png\\ring.png')
-          self.frame=0
-          self.total_frame=0
-
-      def update(self,frame_time):
-
-           global xpos,ypos
-           for i in range(8):
-              for j in range(7):
-                  Tile.x[i][j]=etc["mapx"][i]+etc["tilexsize"][j]+xpos
-                  Tile.y[i][j]=etc["mapy"][i]+etc["tileysize"][j]+ypos
-
-           for j in range(8):
-               for i in range(10):
-                   if map[j].mapnumber==i:
-                        Tile.type[j]=self.TileType[i]
-           self.total_frame+=Tile.FRAMES_PER_ACTION*Tile.ACTION_PER_TIME*frame_time
-           self.frame=int(self.total_frame)%4
-
-
-
-      def draw(self):
-          global chracter
-          global mouse_x,mouse_y
-          for j in range(8):
-           for i in range(7):
-             if Tile.x[j][i]<chracter.state[0]+150 and Tile.x[j][i]>chracter.state[0]-150 \
-                     and Tile.y[j][i]<chracter.state[1]+150 and Tile.y[j][i]>chracter.state[1]-150 and \
-                 Tile.type[j][i]!=0 :
-              self.ring_image.clip_draw(62*(self.frame%4),0,64,66,Tile.x[j][i],Tile.y[j][i])
-          #self.ring_image.clip_draw(62*(self.time%4),0,64,66,mouse_x,mouse_y)
 
 
 class Music():
@@ -181,52 +78,10 @@ class Stat():
         font.draw(800-410,600-20,"%d"%turnnumber,color=(150,100,100))
 
 
-class Move():
-    global xpos,ypos
-    stop,rightmove,leftmove,upmove,downmove=0,1,2,3,4
-    def __init__(self):
-        self.state=self.stop
-
-    def Stop(self):
-        xpos,ypos
-        self.state=self.stop
-    def Rightmove(self):
-        global xpos,ypos
-        if xpos>-100:
-         xpos=xpos-2
-        self.state=self.rightmove
-
-    def Leftmove(self):
-        global xpos,ypos
-        if xpos<100:
-         xpos=xpos+2
-        self.state=self.leftmove
-    def Upmove(self):
-        global xpos,ypos
-        if ypos>-600:
-         ypos=ypos-2
-        self.state=self.upmove
-    def Downmove(self):
-        global xpos,ypos
-        if ypos<20:
-         ypos=ypos+2
-        self.state=self.downmove
-    def update(self):
-        self.handle_state[self.state](self)
-
-
-
-    handle_state={
-        stop:Stop,
-        rightmove:Rightmove,
-        leftmove:Leftmove,
-        upmove:Upmove,
-        downmove:Downmove
-        }
 
 class Chracter():
     image = None
-    state=[200+xpos,50+ypos]
+    state=[200,50]
     global xpos,ypos
 
     def __init__(self):
@@ -474,6 +329,8 @@ def enter():
     global current_time
     global bgm
     global card, actionnumber
+    global xpos,ypos
+    xpos,ypos=0,0
     actionnumber=0
     card=Card()
     bgm=Music()
@@ -487,7 +344,7 @@ def enter():
     stat=Stat()
     pausenum=0
     countumber=0
-    map =[Map() for i in range(8)]
+    map =[mapclass.Map() for i in range(8)]
     for i in map:
         i.number=countumber
         countumber=countumber+1

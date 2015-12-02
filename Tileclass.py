@@ -27,6 +27,8 @@ class Tile():
           8:etc["TileType"]["8"],
           9:etc["TileType"]["9"]
       }
+
+
       TIME_PER_ACTION=0.5
       ACTION_PER_TIME=1.0/TIME_PER_ACTION
       FRAMES_PER_ACTION=4
@@ -115,3 +117,22 @@ class Move():
         upmove:Upmove,
         downmove:Downmove
         }
+
+    def  handle_events(self,event):
+              if event.type == SDL_QUIT:
+                    game_framework.quit()
+              else:
+                    if(event.type,event.key)==(SDL_KEYDOWN,SDLK_RIGHT):
+                        if self.state==self.stop :
+                            self.state=self.rightmove
+                    elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_LEFT):
+                        if self.state==self.stop :
+                             self.state=self.leftmove
+                    elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_UP):
+                          if self.state==self.stop :
+                                 self.state=self.upmove
+                    elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_DOWN):
+                         if self.state==self.stop :
+                                self.state=self.downmove
+                    elif(event.type==SDL_KEYUP):
+                            self.state=self.stop

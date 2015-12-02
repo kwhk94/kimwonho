@@ -131,6 +131,8 @@ class Chracter():
                  if map[j].maponoff==OFF:
                     map[j].maponoff=ON;
                     map[j].mapnumber=random.randint(2,9)
+                    if j==7:
+                        map[j].mapnumber=10
 
 
 
@@ -189,6 +191,7 @@ def handle_events():
         if event.type == SDL_QUIT:
              game_framework.quit()
         else:
+            move.handle_events(event)
             if(event.type,event.key)==(SDL_KEYDOWN,SDLK_ESCAPE):
                 game_framework.quit()
             elif (event.type,event.key)==(SDL_KEYDOWN,SDLK_SPACE):
@@ -208,20 +211,6 @@ def handle_events():
                     turntype=0
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_a):
                  game_framework.push_state(battlemap)
-            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_RIGHT):
-                if move.state==move.stop :
-                    move.state=move.rightmove
-            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_LEFT):
-                if move.state==move.stop :
-                    move.state=move.leftmove
-            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_UP):
-                if move.state==move.stop :
-                    move.state=move.upmove
-            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_DOWN):
-                if move.state==move.stop :
-                    move.state=move.downmove
-            elif(event.type==SDL_KEYUP):
-                move.state=move.stop
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_p):
                 if pausenum==1: pausenum=0
                 elif pausenum==0:pausenum=1
@@ -231,28 +220,32 @@ def handle_events():
                  stat.onoff= not stat.onoff
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_q):
                  print(chracter.hp)
-        if (event.type,event.button)==(SDL_MOUSEBUTTONDOWN,SDL_BUTTON_LEFT):
-             mouse_x,mouse_y=event.x,599-event.y
-             if turntype==2:
-                  actionnumber=click_card()
+            if (event.type,event.button)==(SDL_MOUSEBUTTONDOWN,SDL_BUTTON_LEFT):
+                     mouse_x,mouse_y=event.x,599-event.y
+                     if turntype==2:
+                         actionnumber=click_card()
+
 
 
 
 def result(num):
-    global turntype,turnnumber
+    global turntype,turnnumber,chracter
     turnnumber+=1
-    if num>=0 and num<80:
-        turntype=0
-        return 0
-    elif num>=70 and num<90:
+    if num>=0 and num<chracter.luk*5:
         if chracter.hp<chracter.maxhp:
             turntype=0
             chracter.hp+=1
             return 1
-    else :
+
+    elif num>=chracter.luk*5 and num<chracter.luk*5+10:
         turntype=0
         chracter.hp-=1
         return 2
+    else :
+        turntype=0
+        return 0
+
+
 
 
 
@@ -266,7 +259,6 @@ def click_card():
     stat.onoff=statonoff
     if mouse_x>50 and mouse_x<250 and mouse_y>200 and mouse_y<500 :
         mouse_x,mouse_y=-100,-100
-        print(num[0])
         turntype=3
         return num[0]
     elif mouse_x>300 and mouse_x<500 and mouse_y>200 and mouse_y<500 :
@@ -289,6 +281,9 @@ def get_frame_time():
     frame_time = get_time() - current_time
     current_time += frame_time
     return frame_time
+
+
+
 
 def drawcard(num):
     global cardnumber

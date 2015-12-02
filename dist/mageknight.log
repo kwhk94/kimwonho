@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "mygame.py", line 13, in <module>
+  File "C:\Users\kkk\Documents\2D\kimwonho\game_framework.py", line 92, in run
+    stack[-1].exit()
+  File "C:\Users\kkk\Documents\2D\kimwonho\map.py", line 357, in exit
+    del(map)
+UnboundLocalError: local variable 'map' referenced before assignment
+Traceback (most recent call last):
+  File "mygame.py", line 13, in <module>
+  File "C:\Users\kkk\Documents\2D\kimwonho\game_framework.py", line 92, in run
+    stack[-1].exit()
+  File "C:\Users\kkk\Documents\2D\kimwonho\map.py", line 359, in exit
+    del(map)
+UnboundLocalError: local variable 'map' referenced before assignment

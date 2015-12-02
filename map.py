@@ -11,10 +11,10 @@ import gameover
 import mapclass
 from Tileclass import Tile as Tile
 from Tileclass import Move as Move
+from cardclass import Card as Card
 
 global xpos,ypos
 xpos,ypos=0,0
-
 class Dice():
     def __init__(self):
         self.image=load_image('png\\DICE-4.png')
@@ -141,24 +141,6 @@ class Chracter():
          global turntype
          self.image.clip_draw(0,0,89,119,Chracter.state[0],Chracter.state[1])
 
-class Card():
-    image=None
-    result=None
-    def __init__(self):
-        if self.image==None:
-            self.image=[load_image('png\\card1.png'),
-                        load_image('png\\card2.png'),
-                        load_image('png\\card3.png'),
-                        load_image('png\\card4.png'),
-                        load_image('png\\card5.png'),
-                        load_image('png\\card6.png'),
-                        load_image('png\\card7.png')]
-        if self.result==None:
-            self.result=[load_image('png\\result.png'),
-                         load_image('png\\result 2.png'),
-                         load_image('png\\result 3.bmp')]
-
-
 
 def changemap():
     global turntype
@@ -169,7 +151,7 @@ def changemap():
 
 
 def handle_events():
-    global running
+    global running,chracter
     global xpos,ypos
     global map
     global move
@@ -196,14 +178,14 @@ def handle_events():
                 game_framework.quit()
             elif (event.type,event.key)==(SDL_KEYDOWN,SDLK_SPACE):
                 if turntype==1 and Chracter.type==2:
-                 changemap()
-                elif turntype==1 and Chracter.type==1:
+                    changemap()
+                elif turntype==1 and (Chracter.type==1 or Chracter.type== 8):
                     statonoff=stat.onoff
                     cardnumber=random.randint(0,100);
                     turntype=2
-                elif turntype==2 and Chracter.type==1:
-                    pass
-                elif turntype==3 and Chracter.type==1:
+                elif turntype==2 and (Chracter.type== 1 or Chracter.type==8):
+                    turntype=2
+                elif turntype==3 and ( chracter.type==8 or chracter.type==1 ):
                     turntype=4
                 else :
                     if turntype!=0:
@@ -219,7 +201,7 @@ def handle_events():
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_i) and turntype!=2:
                  stat.onoff= not stat.onoff
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_q):
-                 print(chracter.hp)
+                 print(turntype, chracter.type)
             if (event.type,event.button)==(SDL_MOUSEBUTTONDOWN,SDL_BUTTON_LEFT):
                      mouse_x,mouse_y=event.x,599-event.y
                      if turntype==2:
@@ -231,24 +213,22 @@ def handle_events():
 def result(num):
     global turntype,turnnumber,chracter
     turnnumber+=1
-    if num>=0 and num<chracter.luk*5:
-        if chracter.hp<chracter.maxhp:
-            turntype=0
-            chracter.hp+=1
-            return 1
-
-    elif num>=chracter.luk*5 and num<chracter.luk*5+10:
-        turntype=0
-        chracter.hp-=1
-        return 2
-    else :
-        turntype=0
-        return 0
-
-
-
-
-
+    if chracter.type==road:
+        if num>=0 and num<chracter.luk*5:
+            if chracter.hp<chracter.maxhp:
+                chracter.hp+=1
+        elif num>=chracter.luk*5 and num<chracter.luk*5+10:
+            chracter.hp-=1
+        else :
+             pass
+    elif chracter.type==wood:
+        if num>=0 and num<chracter.luk*5:
+                chracter.gold+=1
+        elif num>=chracter.luk*5 and num<chracter.luk*5+10:
+            turnnumber+=1
+            delay(0.1)
+        else :
+            pass
 
 def click_card():
     global mouse_x,mouse_y
@@ -293,16 +273,23 @@ def drawcard(num):
         card.image[cardnumber%7].clip_draw(0,0,200,300,150,350) #draw_rectangle(50,200,250,500)
         card.image[(cardnumber+1)%7].clip_draw(0,0,200,300,400,350)#draw_rectangle(300,200,500,500)
         card.image[(cardnumber+2)%7].clip_draw(0,0,200,300,650,350)#draw_rectangle(550,200,750,500)
-    if turntype==3:
-        if num<80:
-            card.result[0].clip_draw(0,0,266,399,150,350)
-        elif num>=70 and num<90:
-             card.result[1].clip_draw(0,0,266,399,150,350)
-        else :
-             card.result[2].clip_draw(0,0,266,399,150,350)
-
+    elif turntype==3 and chracter.type==1:
+            if num>=0 and num<chracter.luk*5:
+                card.result_road[2].clip_draw(0,0,266,399,150,350)
+            elif num>=chracter.luk*5 and num<chracter.luk*5+10:
+                card.result_road[1].clip_draw(0,0,266,399,150,350)
+            else:
+                card.result_road[0].clip_draw(0,0,266,399,150,350)
+    elif turntype==3 and chracter.type==8:
+            if num>=0 and num<chracter.luk*5:
+                card.result_wood[2].clip_draw(0,0,266,399,150,350)
+            elif num>=chracter.luk*5 and num<chracter.luk*5+10:
+                card.result_wood[0].clip_draw(0,0,266,399,150,350)
+            else:
+                card.result_wood[1].clip_draw(0,0,266,399,150,350)
     if turntype==4:
          result(actionnumber)
+         turntype=0
 
 
 def enter():

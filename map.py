@@ -213,6 +213,7 @@ def handle_events():
 def result(num):
     global turntype,turnnumber,chracter
     turnnumber+=1
+    road,wood=1,8
     if chracter.type==road:
         if num>=0 and num<chracter.luk*5:
             if chracter.hp<chracter.maxhp:
@@ -264,23 +265,23 @@ def get_frame_time():
 
 
 
-
 def drawcard(num):
     global cardnumber
     global turntype
+    road,wood=1,8
     if turntype==2:
         stat.onoff=1
         card.image[cardnumber%7].clip_draw(0,0,200,300,150,350) #draw_rectangle(50,200,250,500)
         card.image[(cardnumber+1)%7].clip_draw(0,0,200,300,400,350)#draw_rectangle(300,200,500,500)
         card.image[(cardnumber+2)%7].clip_draw(0,0,200,300,650,350)#draw_rectangle(550,200,750,500)
-    elif turntype==3 and chracter.type==1:
+    elif turntype==3 and chracter.type==road:
             if num>=0 and num<chracter.luk*5:
-                card.result_road[2].clip_draw(0,0,266,399,150,350)
-            elif num>=chracter.luk*5 and num<chracter.luk*5+10:
                 card.result_road[1].clip_draw(0,0,266,399,150,350)
+            elif num>=chracter.luk*5 and num<chracter.luk*5+10:
+                card.result_road[2].clip_draw(0,0,266,399,150,350)
             else:
                 card.result_road[0].clip_draw(0,0,266,399,150,350)
-    elif turntype==3 and chracter.type==8:
+    elif turntype==3 and chracter.type==wood:
             if num>=0 and num<chracter.luk*5:
                 card.result_wood[2].clip_draw(0,0,266,399,150,350)
             elif num>=chracter.luk*5 and num<chracter.luk*5+10:

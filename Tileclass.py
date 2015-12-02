@@ -25,8 +25,7 @@ class Tile():
           6:etc["TileType"]["6"],
           7:etc["TileType"]["7"],
           8:etc["TileType"]["8"],
-          9:etc["TileType"]["9"],
-          10:etc["TileType"]["10"]
+          9:etc["TileType"]["9"]
       }
 
 
@@ -42,7 +41,7 @@ class Tile():
           if Tile.y==[]:
              for i in range(8):
                     Tile.y.append([etc["mapy"][i]+etc["tileysize"][j]+map.ypos for j in range(7)])
-          Tile.type=[self.TileType[i] for i in range(11)]
+          Tile.type=[self.TileType[i] for i in range(10)]
           if Tile.ring_image==None:
                 Tile.ring_image=load_image('png\\ring.png')
           self.frame=0
@@ -57,7 +56,7 @@ class Tile():
                   Tile.y[i][j]=etc["mapy"][i]+etc["tileysize"][j]+map.ypos
 
            for j in range(8):
-               for i in range(11):
+               for i in range(10):
                    if map.map[j].mapnumber==i:
                         Tile.type[j]=self.TileType[i]
            self.total_frame+=Tile.FRAMES_PER_ACTION*Tile.ACTION_PER_TIME*frame_time

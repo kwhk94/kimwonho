@@ -57,6 +57,8 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key==SDLK_b:
              game_framework.pop_state()
+        elif event.type == SDL_KEYDOWN and event.key==SDLK_p:
+             print(enamy.hp)
         elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_i):
                  stat.onoff= not stat.onoff
         elif event.type == SDL_KEYDOWN and event.key==SDLK_c: #전투 초기화

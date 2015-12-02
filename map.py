@@ -169,21 +169,10 @@ def changemap():
 
 
 def handle_events():
-    global running
-    global xpos,ypos
-    global map
-    global move
-    global tile
-    global stat
-    global mouse_x,mouse_y
-    global pausenum
-    global dice_num
-    global tiletype
-    global turntype
-    global turnnumber
-    global statonoff
-    global actionnumber
-    global cardnumber
+    global running,xpos,ypos,actionnumber
+    global map,move,tile,turnnumber,cardnumber
+    global stat,mouse_x,mouse_y,statonoff
+    global pausenum,dice_num,tiletype,turntype
 
     Stop,Right,Left,UP,DOWN=0,1,2,3,4
     events = get_events()
@@ -195,18 +184,20 @@ def handle_events():
             if(event.type,event.key)==(SDL_KEYDOWN,SDLK_ESCAPE):
                 game_framework.quit()
             elif (event.type,event.key)==(SDL_KEYDOWN,SDLK_SPACE):
-                if turntype==1 and Chracter.type==2:
+                if turntype==1 and (Chracter.type==2 or Chracter.type==3 or Chracter.type==5 or Chracter.type==20):
                  changemap()
                 elif turntype==1 and Chracter.type==1:
                     statonoff=stat.onoff
                     cardnumber=random.randint(0,100);
                     turntype=2
                 elif turntype==2 and Chracter.type==1:
-                    pass
+                    turntype=3
                 elif turntype==3 and Chracter.type==1:
                     turntype=4
+                elif turntype==4 and Chracter.type==1:
+                    turntype=0
                 else :
-                    if turntype!=0:
+                    if turntype!=0 and turntype!=3:
                         turnnumber+=1
                     turntype=0
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_a):
@@ -235,15 +226,15 @@ def result(num):
         if chracter.hp<chracter.maxhp:
             turntype=0
             chracter.hp+=1
-            return 1
+
 
     elif num>=chracter.luk*5 and num<chracter.luk*5+10:
         turntype=0
         chracter.hp-=1
-        return 2
+
     else :
         turntype=0
-        return 0
+
 
 
 
@@ -269,6 +260,9 @@ def click_card():
         mouse_x,mouse_y=-100,-100
         turntype=3
         return num[2]
+    else :
+        turntype=3
+        return num[0]
 
 
 
@@ -303,6 +297,7 @@ def drawcard(num):
 
     if turntype==4:
          result(actionnumber)
+         turntype=0
 
 
 def enter():

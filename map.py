@@ -151,21 +151,11 @@ def changemap():
 
 
 def handle_events():
-    global running,chracter
-    global xpos,ypos
-    global map
-    global move
-    global tile
-    global stat
-    global mouse_x,mouse_y
-    global pausenum
-    global dice_num
-    global tiletype
-    global turntype
-    global turnnumber
-    global statonoff
-    global actionnumber
-    global cardnumber
+    global running,xpos,ypos,actionnumber
+    global map,move,tile,turnnumber,cardnumber
+    global stat,mouse_x,mouse_y,statonoff
+    global pausenum,dice_num,tiletype,turntype
+
 
     Stop,Right,Left,UP,DOWN=0,1,2,3,4
     events = get_events()
@@ -177,7 +167,7 @@ def handle_events():
             if(event.type,event.key)==(SDL_KEYDOWN,SDLK_ESCAPE):
                 game_framework.quit()
             elif (event.type,event.key)==(SDL_KEYDOWN,SDLK_SPACE):
-                if turntype==1 and Chracter.type==2:
+                if turntype==1 and (Chracter.type==2 or Chracter.type==3 or Chracter.type==5 or Chracter.type==20):
                     changemap()
                 elif turntype==1 and (Chracter.type==1 or Chracter.type== 8):
                     statonoff=stat.onoff
@@ -294,24 +284,11 @@ def drawcard(num):
 
 
 def enter():
-    global map
-    global move
-    global chracter
-    global tile
-    global pausenum
-    global mouse_x,mouse_y
-    global dice_num
-    global stat
-    global font
-    global smallfont
-    global bigfont
-    global timer
-    global tiletype
-    global turntype
-    global turnnumber
-    global current_time
-    global bgm
-    global card, actionnumber
+    global map, move,chracter,tile
+    global pausenum,mouse_x,mouse_y,dice_num
+    global stat,font,smallfont,bigfont
+    global timer,tiletype,turntype,turnnumber
+    global current_time,bgm,card, actionnumber
     global xpos,ypos
     xpos,ypos=0,0
     actionnumber=0
@@ -326,37 +303,37 @@ def enter():
     bigfont=load_font('etc\\font.ttf',50)
     stat=Stat()
     pausenum=0
-    countumber=0
+    countnumber=0
     map =[mapclass.Map() for i in range(8)]
     for i in map:
-        i.number=countumber
-        countumber=countumber+1
+        i.number=countnumber
+        countnumber=countnumber+1
     map[0].maponoff=1
     map[0].mapnumber=0
     mouse_x,mouse_y =0,0
     tile=Tile()
     chracter=Chracter()
     move=Move()
-    #map[0].mapononff=1
     current_time = get_time()
 
 
 
 
 def exit():
-    del(map)
-    del(tile)
-    del(chracter)
-    del(move)
-    del(pausenum)
-    del(mouse_x,mouse_y)
-    del(dice_num)
-    del(stat)
-    del(font)
-    del(smallfont)
-    del(timer)
-    del(tiletype)
-    del(turntype)
+     global map,tile,chracter,move,pausenum,mouse_x,mouse_y
+     global stat,font,smallfont,timer,tiletype,turntype
+     del(map)
+     del(tile)
+     del(chracter)
+     del(move)
+     del(pausenum)
+     del(mouse_x,mouse_y)
+     del(stat)
+     del(font)
+     del(smallfont)
+     del(timer)
+     del(tiletype)
+     del(turntype)
 
 
 def pause():

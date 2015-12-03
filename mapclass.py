@@ -21,7 +21,7 @@ class Map():
                        load_image('png\\realmap (3).png'),load_image('png\\realmap (4).png'),
                        load_image('png\\realmap (5).png'),load_image('png\\realmap (6).png'),
                        load_image('png\\realmap (7).png'),load_image('png\\realmap (10).png'),
-                       load_image('png\\realmap (11).png')]
+                       load_image('png\\realmap (9).png')]
         self.number=0
         self.mapnumber=1
         if Map.maponoff==None:

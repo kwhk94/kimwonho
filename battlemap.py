@@ -21,7 +21,6 @@ class Dice():
     def __init__(self):
         if Dice.image==None:
             Dice.image=load_image('png\\DICE-4.png')
-
         self.frame=0
         self.xpos=random.randint(70,540)
         self.number=0

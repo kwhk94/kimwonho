@@ -95,7 +95,7 @@ py2exe_options = dict(
     bundle_files=2,
     dist_dir='dist',
     )
-a=[]
+
 a=["etc\\"+i for i in os.listdir('etc')]
 b=["png\\"+i for i in os.listdir('png')]
 resources=a+b

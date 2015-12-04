@@ -103,6 +103,7 @@ def battleupdate():
                     stat.damage-=1
                     if enamy.hp==0:
                         map.chracter.gold+=enamy.maxhp
+                        map.chracter.exp+=enamy.maxhp
                         battleturn=8
                     t_time=time_num
                 elif stat.damage==0:
@@ -143,6 +144,15 @@ def battleupdate():
                 elif e_stat.damage==0:
                     map.chracter.df=map.chracter.maxdf
                     battleturn=7
+    if battleturn==8: #레벨업에따른 체력 상승
+        if map.chracter.hp<=5:
+            if map.chracter.exp>(map.chracter.hp-2)*2:
+                map.chracter.hp+=1
+                map.chracter.exp=0
+        elif map.chracter.hp<12 :
+            if map.chracter.exp>(map.chracter.hp-6)*3+10:
+                map.chracter.hp+=1
+                map.chracter.exp=0
 
 
 
@@ -240,6 +250,8 @@ def draw():
         game_framework.push_state(gameover)
     if battleturn==8:
          map.bigfont.draw(200,100,"PRESS SPACE!",color=(230,0,0))
+    if battleturn==9:
+        map.bigfont.draw(200,100,"LEVEL UP!",color=(230,0,0))
     update_canvas()
 
     delay(0.03)

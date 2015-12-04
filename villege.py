@@ -30,12 +30,8 @@ def handle_events():
             elif (event.type,event.key)==(SDL_KEYDOWN,SDLK_SPACE):
                 if turntype==2 :
                     turntype=4
-                elif turntype==10:
+                elif turntype==10 or turntype==9:
                     game_framework.pop_state()
-                else :
-                    if turntype!=0:
-                        turnnumber+=1
-                    turntype=0
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_p):
                 if pausenum==1: pausenum=0
                 elif pausenum==0:pausenum=1
@@ -53,18 +49,33 @@ def handle_events():
                     itemnumber+=1
             if (event.type,event.button)==(SDL_MOUSEBUTTONDOWN,SDL_BUTTON_LEFT):
                      mouse_x,mouse_y=event.x,599-event.y
-                     if turntype==1 :
+                     if turntype==1 or turntype==3:
                          actionnumber=click_card()
 def result(num):
-    global turntype,turnnumber,chracter
+    global turntype,turnnumber,chracter,itemnumber
     map.turnnumber+=1
-    if num>=0 and num<map.chracter.luk*5:
-            if map.chracter.hp<map.chracter.maxhp:
-                map.chracter.hp+=1
-    elif num>=map.chracter.luk*5 and num<map.chracter.luk*5+10:
-            map.chracter.hp-=1
-    else :
-             pass
+    if turntype==2:
+        if num>=0 and num<map.chracter.luk*5:
+                if map.chracter.hp<map.chracter.maxhp:
+                    map.chracter.hp+=1
+        elif num>=map.chracter.luk*5 and num<map.chracter.luk*5+10:
+                map.chracter.hp-=1
+        else :
+                 pass
+    if turntype==3:
+        if num==0:
+            map.chracter.gold-=(map.chracter.str-2)*2
+            map.chracter.str+=1
+            turntype=9
+        elif num==1:
+            map.chracter.gold-=map.chracter.df*5
+            map.chracter.df+=1
+            turntype=9
+        elif num==2:
+            map.chracter.gold-=itemnumber
+            map.chracter.hp+=itemnumber
+            turntype=9
+
 
 def click_card():
     global mouse_x,mouse_y
@@ -87,20 +98,23 @@ def click_card():
                if map.chracter.hp<map.chracter.maxhp:
                      map.chracter.hp+=1
                turntype=10
+    if turntype==3:
+         if mouse_x>50 and mouse_x<250 and mouse_y>200 and mouse_y<500 :
+              mouse_x,mouse_y=-100,-100
+              print("0")
+              if (map.chracter.str-2)*2<=map.chracter.gold and map.chracter.str<12:
+                   result(0)
 
-    # if turntype==2:
-    #      if mouse_x>50 and mouse_x<250 and mouse_y>200 and mouse_y<500 :
-    #           mouse_x,mouse_y=-100,-100
-    #           turntype=3
-    #           return num[0]
-    #      elif mouse_x>300 and mouse_x<500 and mouse_y>200 and mouse_y<500 :
-    #            mouse_x,mouse_y=-100,-100
-    #            turntype=3
-    #            return num[1]
-    #      elif mouse_x>550 and mouse_x<750 and mouse_y>200 and mouse_y<500 :
-    #            mouse_x,mouse_y=-100,-100
-    #            turntype=3
-    #            return num[2]
+         elif mouse_x>300 and mouse_x<500 and mouse_y>200 and mouse_y<500 :
+               mouse_x,mouse_y=-100,-100
+               if (map.chracter.df)*5<=map.chracter.gold and map.chracter.df<5:
+                    result(1)
+
+         elif mouse_x>550 and mouse_x<750 and mouse_y>200 and mouse_y<500 :
+               mouse_x,mouse_y=-100,-100
+               if map.chracter .gold>0:
+                    result(2)
+
 
 
 
@@ -133,7 +147,7 @@ def drawcard(num):
                 card.result_road[2].clip_draw(0,0,266,399,150,350)
             else:
                 card.result_road[0].clip_draw(0,0,266,399,150,350)
-    elif turntype==3:
+    elif turntype==3 or turntype==9:
         card.villege[0].clip_draw(0,0,200,300,150,350) #draw_rectangle(50,200,250,500)
         font.draw(90,380,"무기를 산다",color=(150,350,0))
         font.draw(90,350,"가격 : %d"%((map.chracter.str-2)*2),color=(150,350,0))
@@ -170,7 +184,6 @@ def enter():
     actionnumber=0
     card=Card()
     cardnumber=random.randint(0,100);
-    map.turnnumber+=1
     turntype=1
     tiletype=0
     timer=0
@@ -228,7 +241,7 @@ def draw():
     backpicture.draw_to_origin(0,0)
     stat.draw()
     drawcard(actionnumber)
-    if turntype==10:
+    if turntype==10 or turntype ==9:
          bigfont.draw(200,100,"PRESS SPACE!",color=(230,0,0))
     if map.chracter.hp==0:
         game_framework.push_state(gameover)

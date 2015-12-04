@@ -101,6 +101,7 @@ class Chracter():
         Chracter.agi=Stat_data["AGI"]
         Chracter.luk=Stat_data["LUK"]
         Chracter.gold=Stat_data["Gold"]
+        Chracter.exp=0
         Chracter.type=1
 
 
@@ -164,7 +165,7 @@ def handle_events():
 
     Stop,Right,Left,UP,DOWN=0,1,2,3,4
     events = get_events()
-
+    battle,ville=0,1
     for event in events:
         if event.type == SDL_QUIT:
              game_framework.quit()
@@ -178,11 +179,10 @@ def handle_events():
                     statonoff=stat.onoff
                     cardnumber=random.randint(0,100);
                     turntype=2
-                elif turntype==1 :
-                    if Chracter.type==2 or Chracter.type==3 or Chracter.type==5 or Chracter.type==20:
-                        changemap(0)
-                    elif chracter.type==4:
-                        changemap(1)
+                elif turntype==1 and Chracter.type==2 or Chracter.type==3 or Chracter.type==5 or Chracter.type==20 :
+                        changemap(battle)
+                elif turntype==1 and chracter.type==4:
+                        changemap(ville)
                 elif turntype==2 and (Chracter.type== 1 or Chracter.type==8):
                     turntype=3
                 elif turntype==3 and ( chracter.type==8 or chracter.type==1 ):
@@ -235,20 +235,23 @@ def click_card():
     global mouse_x,mouse_y
     global turntype
     num=[0,0,0]
-    for i in num :
+    for i in range(3) :
         num[i]=random.randint(0,100)
     stat.onoff=statonoff
     if mouse_x>50 and mouse_x<250 and mouse_y>200 and mouse_y<500 :
         mouse_x,mouse_y=-100,-100
         turntype=3
+        print(num[0])
         return num[0]
     elif mouse_x>300 and mouse_x<500 and mouse_y>200 and mouse_y<500 :
         mouse_x,mouse_y=-100,-100
         turntype=3
+        print(num[1])
         return num[1]
     elif mouse_x>550 and mouse_x<750 and mouse_y>200 and mouse_y<500 :
         mouse_x,mouse_y=-100,-100
         turntype=3
+        print(num[2])
         return num[2]
 
 

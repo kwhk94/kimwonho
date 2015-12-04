@@ -76,9 +76,6 @@ def handle_events():
             if battleturn==8:
                 game_framework.pop_state()
 
-        elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_o):
-             print(dice_num)
-
 
 
 def battleupdate():

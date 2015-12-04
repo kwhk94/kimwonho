@@ -13,6 +13,7 @@ global font
 class Card():
     image=None
     result=None
+    villege=None
     def __init__(self):
         if self.image==None:
             self.image=[load_image('png\\card1.png'),
@@ -29,3 +30,5 @@ class Card():
             self.result_wood=[load_image('png\\resultwood1.png'),
                          load_image('png\\resultwood2.png'),
                          load_image('png\\resultwood3.png')]
+        if self.villege==None:
+            self.villege=[load_image('png\\resultvil.png')]

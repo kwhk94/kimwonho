@@ -96,13 +96,8 @@ py2exe_options = dict(
     dist_dir='dist',
     )
 
-a=["etc\\"+i for i in os.listdir('etc')]
-b=["png\\"+i for i in os.listdir('png')]
-resources=a+b
-
-print(resources)
-
-#resources = "etc png".split()
+etc=["etc\\"+i for i in os.listdir('etc')]
+png=["png\\"+i for i in os.listdir('png')]
 
 
 if platform.architecture()[0] == '32bit':
@@ -115,7 +110,7 @@ sdl_dlls = [sdl_folder + file_name for file_name in os.listdir(sdl_folder)]
 
 setup(name="name",
       windows=[mygame],
-      data_files=[('etc\\', a), ('png\\',b),(sdl_folder, sdl_dlls)], # copy resource to '.' folder
+      data_files=[('etc\\', etc), ('png\\',png),(sdl_folder, sdl_dlls)], # copy resource to '.' folder
       zipfile=None,
       options={"py2exe": py2exe_options},
       )

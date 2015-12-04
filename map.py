@@ -9,6 +9,7 @@ global dice_num
 global font
 import gameover
 import mapclass
+import villege
 from Tileclass import Tile as Tile
 from Tileclass import Move as Move
 from cardclass import Card as Card
@@ -142,10 +143,14 @@ class Chracter():
          self.image.clip_draw(0,0,89,119,Chracter.state[0],Chracter.state[1])
 
 
-def changemap():
+def changemap(num):
     global turntype
     global mouse_x,mouse_y
-    game_framework.push_state(battlemap)
+    battlemapnum,villegenum=0,1
+    if num==battlemapnum:
+        game_framework.push_state(battlemap)
+    elif num==villegenum:
+        game_framework.push_state(villege)
     turntype=0
     mouse_x,mouse_y=-1000,-1000   #마우스위치를 유지시키면 화면이 돌아올때 이벤트가중복발생된다
 
@@ -159,6 +164,7 @@ def handle_events():
 
     Stop,Right,Left,UP,DOWN=0,1,2,3,4
     events = get_events()
+
     for event in events:
         if event.type == SDL_QUIT:
              game_framework.quit()
@@ -167,14 +173,18 @@ def handle_events():
             if(event.type,event.key)==(SDL_KEYDOWN,SDLK_ESCAPE):
                 game_framework.quit()
             elif (event.type,event.key)==(SDL_KEYDOWN,SDLK_SPACE):
-                if turntype==1 and (Chracter.type==2 or Chracter.type==3 or Chracter.type==5 or Chracter.type==20):
-                    changemap()
-                elif turntype==1 and (Chracter.type==1 or Chracter.type== 8):
+
+                if turntype==1 and (Chracter.type==1 or Chracter.type== 8):
                     statonoff=stat.onoff
                     cardnumber=random.randint(0,100);
                     turntype=2
+                elif turntype==1 :
+                    if Chracter.type==2 or Chracter.type==3 or Chracter.type==5 or Chracter.type==20:
+                        changemap(0)
+                    elif chracter.type==4:
+                        changemap(1)
                 elif turntype==2 and (Chracter.type== 1 or Chracter.type==8):
-                    turntype=2
+                    turntype=3
                 elif turntype==3 and ( chracter.type==8 or chracter.type==1 ):
                     turntype=4
                 else :
@@ -191,7 +201,7 @@ def handle_events():
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_i) and turntype!=2:
                  stat.onoff= not stat.onoff
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_q):
-                 print(turntype, chracter.type)
+                 game_framework.push_state(villege)
             if (event.type,event.button)==(SDL_MOUSEBUTTONDOWN,SDL_BUTTON_LEFT):
                      mouse_x,mouse_y=event.x,599-event.y
                      if turntype==2:

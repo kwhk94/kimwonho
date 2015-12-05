@@ -31,12 +31,13 @@ def handle_events():
                 if turntype==2 :
                     turntype=4
                 elif turntype==10 or turntype==9:
+                    map.turnnumber+=1
                     game_framework.pop_state()
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_p):
                 if pausenum==1: pausenum=0
                 elif pausenum==0:pausenum=1
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_o):
-                 print(battlemap.dice_num)
+                 print(actionnumber)
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_i):
                  stat.onoff= not stat.onoff
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_q):
@@ -53,7 +54,6 @@ def handle_events():
                          actionnumber=click_card()
 def result(num):
     global turntype,turnnumber,chracter,itemnumber
-    map.turnnumber+=1
     if turntype==2:  ## 랜덤 상황
         if num>=0 and num<5:
                 if map.chracter.maxhp>1:
@@ -153,7 +153,8 @@ def drawcard(num):
                  card.villege.clip_draw(0,0,266,399,150,350)
                  font.draw(90,380,"누군가가 돈을",color=(150,350,0))
                  font.draw(90,350,"훔쳐가버렸다!",color=(150,350,0))
-            elif num>15 and num<map.chracter.luk*5+15:
+            elif num>=15 and num<(map.chracter.luk*5+15):
+                 card.villege.clip_draw(0,0,266,399,150,350)
                  font.draw(90,380,"상징적인 물건을",color=(150,350,0))
                  font.draw(90,350,"얻었다.",color=(150,350,0))
                  font.draw(90,320,"행운이 증가한다",color=(150,350,0))
@@ -162,6 +163,7 @@ def drawcard(num):
                  card.villege.clip_draw(0,0,266,399,150,350)
                  font.draw(90,380,"아무일도",color=(150,350,0))
                  font.draw(90,350,"일어나지 않았다",color=(150,350,0))
+
     elif turntype==3 or turntype==9:
         card.villege.clip_draw(0,0,200,300,150,350) #draw_rectangle(50,200,250,500)
         font.draw(90,380,"무기를 산다",color=(150,350,0))

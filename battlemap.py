@@ -101,7 +101,7 @@ def battleupdate():
                         enamy.df-=1
                     else : enamy.hp-=1
                     stat.damage-=1
-                    if enamy.hp==0:
+                    if enamy.hp==0: #경험치 초과로인한 레벨업
                         map.chracter.gold+=enamy.maxhp
                         map.chracter.exp+=enamy.maxhp
                         battleturn=8
@@ -145,14 +145,22 @@ def battleupdate():
                     map.chracter.df=map.chracter.maxdf
                     battleturn=7
     if battleturn==8: #레벨업에따른 체력 상승
-        if map.chracter.hp<=5:
+        if map.chracter.maxhp<3:
+            map.chracter.exp-=2
+            map.chracter.hp+=1
+            map.chracter.maxhp+=1
+        elif map.chracter.maxhp<=5:
             if map.chracter.exp>(map.chracter.hp-2)*2:
+                map.chracter.exp-=(map.chracter.hp-2)*2
                 map.chracter.hp+=1
-                map.chracter.exp=0
-        elif map.chracter.hp<12 :
+                map.chracter.maxhp+=1
+
+        elif map.chracter.maxhp<12 :
             if map.chracter.exp>(map.chracter.hp-6)*3+10:
+                map.chracter.exp-=(map.chracter.hp-6)*3+10
                 map.chracter.hp+=1
-                map.chracter.exp=0
+                map.chracter.maxhp+=1
+
 
 
 

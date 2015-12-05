@@ -14,6 +14,7 @@ class Card():
     image=None
     result=None
     villege=None
+    ruins=None
     def __init__(self):
         if self.image==None:
             self.image=[load_image('png\\card1.png'),
@@ -31,4 +32,6 @@ class Card():
                          load_image('png\\resultwood2.png'),
                          load_image('png\\resultwood3.png')]
         if self.villege==None:
-            self.villege=[load_image('png\\resultvil.png')]
+            self.villege=load_image('png\\resultvil.png')
+        if self.ruins==None:
+            self.ruins=load_image('png\\resultruin.png')

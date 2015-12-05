@@ -54,12 +54,15 @@ def handle_events():
 def result(num):
     global turntype,turnnumber,chracter,itemnumber
     map.turnnumber+=1
-    if turntype==2:
-        if num>=0 and num<map.chracter.luk*5:
-                if map.chracter.hp<map.chracter.maxhp:
-                    map.chracter.hp+=1
-        elif num>=map.chracter.luk*5 and num<map.chracter.luk*5+10:
-                map.chracter.hp-=1
+    if turntype==2:  ## 랜덤 상황
+        if num>=0 and num<5:
+                if map.chracter.maxhp>1:
+                    map.chracter.hp-=1
+                    map.chracter.maxhp-=1
+        elif num>=5 and num<10:
+                map.chracter.gold=0
+        elif num>15 and num<map.chracter.luk*5+15 and map.chracter.luk<5:
+                map.chracter.luk+=1
         else :
                  pass
     if turntype==3:
@@ -87,7 +90,8 @@ def click_card():
          if mouse_x>50 and mouse_x<250 and mouse_y>200 and mouse_y<500 :
               mouse_x,mouse_y=-100,-100
               turntype=2
-              return random.randint(0,100)
+              result(num[0])
+              return num[0]
 
          elif mouse_x>300 and mouse_x<500 and mouse_y>200 and mouse_y<500 :
                mouse_x,mouse_y=-100,-100
@@ -135,34 +139,45 @@ def drawcard(num):
     road,wood=1,8
     if turntype==1 or turntype==10:
         card.image[(cardnumber+1)%7].clip_draw(0,0,200,300,150,350)#draw_rectangle(300,200,500,500)
-        card.villege[0].clip_draw(0,0,200,300,400,350) #draw_rectangle(50,200,250,500)
+        card.villege.clip_draw(0,0,200,300,400,350) #draw_rectangle(50,200,250,500)
         font.draw(340,380,"물건을 산다",color=(150,350,0))
-        card.villege[0].clip_draw(0,0,200,300,650,350) #draw_rectangle(50,200,250,500)
+        card.villege.clip_draw(0,0,200,300,650,350) #draw_rectangle(50,200,250,500)
         font.draw(590,380,"휴식한다",color=(150,350,0))
 
     elif turntype==2:
-            if num>=0 and num<map.chracter.luk*5:
-                card.result_road[1].clip_draw(0,0,266,399,150,350)
-            elif num>=map.chracter.luk*5 and num<map.chracter.luk*5+10:
-                card.result_road[2].clip_draw(0,0,266,399,150,350)
+            if num>=0 and num<5:
+                 card.villege.clip_draw(0,0,266,399,150,350)
+                 font.draw(90,380,"음식을 잘못먹었다",color=(150,350,0))
+                 font.draw(90,350,"최대체력이 감소한다",color=(150,350,0))
+            elif num>=5 and num<15:
+                 card.villege.clip_draw(0,0,266,399,150,350)
+                 font.draw(90,380,"누군가가 돈을",color=(150,350,0))
+                 font.draw(90,350,"훔쳐가버렸다!",color=(150,350,0))
+            elif num>15 and num<map.chracter.luk*5+15:
+                 font.draw(90,380,"상징적인 물건을",color=(150,350,0))
+                 font.draw(90,350,"얻었다.",color=(150,350,0))
+                 font.draw(90,320,"행운이 증가한다",color=(150,350,0))
+                 font.draw(90,290,"(최대 5까지)",color=(150,350,0))
             else:
-                card.result_road[0].clip_draw(0,0,266,399,150,350)
+                 card.villege.clip_draw(0,0,266,399,150,350)
+                 font.draw(90,380,"아무일도",color=(150,350,0))
+                 font.draw(90,350,"일어나지 않았다",color=(150,350,0))
     elif turntype==3 or turntype==9:
-        card.villege[0].clip_draw(0,0,200,300,150,350) #draw_rectangle(50,200,250,500)
+        card.villege.clip_draw(0,0,200,300,150,350) #draw_rectangle(50,200,250,500)
         font.draw(90,380,"무기를 산다",color=(150,350,0))
         font.draw(90,350,"가격 : %d"%((map.chracter.str-2)*2),color=(150,350,0))
         font.draw(90,320,"데미지 +1",color=(150,350,0))
-        card.villege[0].clip_draw(0,0,200,300,400,350) #draw_rectangle(50,200,250,500)
+        card.villege.clip_draw(0,0,200,300,400,350) #draw_rectangle(50,200,250,500)
         font.draw(340,380,"방어구를 산다",color=(150,350,0))
         font.draw(340,350,"가격 : %d"%((map.chracter.df)*5),color=(150,350,0))
         font.draw(340,320,"방어력 +1",color=(150,350,0))
         font.draw(340,290,"(최대방어력 5",color=(150,350,0))
         font.draw(340,260,"를 넘지 못한다)",color=(150,350,0))
-        card.villege[0].clip_draw(0,0,200,300,650,350) #draw_rectangle(50,200,250,500)
+        card.villege.clip_draw(0,0,200,300,650,350) #draw_rectangle(50,200,250,500)
         font.draw(590,380,"회복한다.",color=(150,350,0))
         font.draw(590,350,"골드 1당 1회복",color=(150,350,0))
         font.draw(590,320,"%d 회복"%itemnumber,color=(150,350,0))
-        card.villege[0].clip_draw(25,30,130,50,645,550) #draw_rectangle(50,200,250,500)
+        card.villege.clip_draw(25,30,130,50,645,550) #draw_rectangle(50,200,250,500)
         font.draw(590,550,"+,-키로 수치조절",color=(255,0,0))
 
 

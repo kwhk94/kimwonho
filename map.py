@@ -10,6 +10,7 @@ global font
 import gameover
 import mapclass
 import villege
+import ruins
 from Tileclass import Tile as Tile
 from Tileclass import Move as Move
 from cardclass import Card as Card
@@ -63,6 +64,7 @@ class Stat():
     def draw(self):
         if self.onoff==0:
             self.image.clip_draw(0,0,159,250,800-80,600-120)
+            self.image.clip_draw(0,0,159,250,800-80,600-170)
             self.blood.clip_draw(70*(chracter.hp-1),0,70,99,800-122,600-49)
             self.armor.clip_draw(84*(chracter.df-1),0,84,99,800-50,600-49)
             font.draw(800-150,600-130,'STR :')
@@ -73,6 +75,13 @@ class Stat():
             font.draw(800-40,600-190,"%d"%chracter.gold,color=(200,200,0))
             font.draw(800-150,600-220,'AGI :')
             font.draw(800-40,600-220,"%d"%chracter.agi,color=(100,100,100))
+            font.draw(800-150,600-250,'Exp')
+            font.draw(800-40,600-250,"%d/"%chracter.exp,color=(0,100,200))
+            if chracter.hp<3:
+                 font.draw(800-50,600-280,"%d"%2,color=(0,100,200))
+            elif chracter.hp<=5:
+                font.draw(800-50,600-280,"%d"%((chracter.hp-2)*2),color=(0,100,200))
+            else :  font.draw(800-50,600-280,"%d"%((chracter.hp-6)*3+10),color=(0,100,200))
             smallfont.draw(800-150,600-110,'Maxhp :')
             smallfont.draw(800-100,600-110,"%d"%chracter.maxhp,color=(200,0,0))
         font.draw(800-350,600-20,'Turn')
@@ -201,7 +210,7 @@ def handle_events():
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_i) and turntype!=2:
                  stat.onoff= not stat.onoff
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_q):
-                 game_framework.push_state(villege)
+                 game_framework.push_state(ruins)
             if (event.type,event.button)==(SDL_MOUSEBUTTONDOWN,SDL_BUTTON_LEFT):
                      mouse_x,mouse_y=event.x,599-event.y
                      if turntype==2:
@@ -401,13 +410,14 @@ def draw():
 
     tile.draw()
     chracter.draw()
-    stat.draw()
+
     timer+=1
     if turntype==1:
          bigfont.draw(200,100,"PRESS SPACE!",color=(230,0,0))
     drawcard(actionnumber)
     if chracter.hp==0:
         game_framework.push_state(gameover)
+    stat.draw()
     delay(0.01)
 
 

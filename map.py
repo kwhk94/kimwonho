@@ -38,7 +38,7 @@ class Music():
     def __init__(self):
         if self.bgm==None:
             self.bgm=load_music('etc\\bgm.ogg')
-            self.bgm.set_volume(12)
+            self.bgm.set_volume(24)
             self.bgm.repeat_play()
 
 

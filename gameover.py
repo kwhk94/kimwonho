@@ -22,12 +22,7 @@ def exit():
 
 
 def update():
-    global logo_time
-    if(logo_time >20.0):
-        logo_time = 0
-        game_framework.quit()
-    delay(0.01)
-    logo_time+=0.01
+    pass
 
 def draw():
     global image

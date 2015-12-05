@@ -185,6 +185,7 @@ def drawcard(num):
 
     if turntype==4:
          result(actionnumber)
+         map.turnnumber+=1
          game_framework.pop_state()
 
 

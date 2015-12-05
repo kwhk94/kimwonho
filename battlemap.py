@@ -23,6 +23,7 @@ class Dice():
             Dice.image=load_image('png\\DICE-4.png')
         self.frame=0
         self.xpos=random.randint(70,540)
+        self.ypos=0
         self.number=0
         self.total_frame=0
         self.time=0
@@ -37,7 +38,7 @@ class Dice():
          self.total_frame+=Dice.FRAMES_PER_ACTION*Dice.ACTION_PER_TIME*self.time
 
     def draw(self):
-         self.image.clip_draw(1+(self.frame)*140,283*(6-(self.number)),140,240,self.xpos,150)
+         self.image.clip_draw(1+(self.frame)*140,283*(6-(self.number)),140,240,self.xpos,100+self.ypos*100)
 
 
 def handle_events():
@@ -68,7 +69,7 @@ def handle_events():
                     i.currenttime=get_time()
                     i.frame=0
                     i.number=random.randint(1,6)
-                    i.xpos=random.randint(50+70*num,50+90*num)
+                    i.xpos=random.randint(50+70*(num%6),50+90*(num%6))
                     num+=1
                     dice_num=[diceteam[i].number for i in  range(map.chracter.str)]
                 battleturn=1
@@ -111,7 +112,7 @@ def battleupdate():
                     num=0
                     for i in enamy_dice:
                         i.number=random.randint(1,6)
-                        i.xpos=random.randint(50+70*num,50+90*num)
+                        i.xpos=random.randint(50+70*(num%6),50+90*(num%6))
                         num+=1
                     dice_num=[enamy_dice[i].number for i in  range(enamy.str)]
                     for i in range(enamy.str):
@@ -245,10 +246,16 @@ def draw():
     #print("%f,%f"%(battleturn,stat.damage))
     clear_canvas()
     if battleturn>0 and battleturn<5:
-        for dice in diceteam:
+         num=0
+         for dice in diceteam:
+            dice.ypos=1*((int)(num/6))
+            num+=1
             dice.draw()
     if battleturn>=5 and battleturn<8:
+        num=0
         for dice in enamy_dice:
+            dice.ypos=1*((int)(num/6))
+            num+=1
             dice.draw()
     battledraw()
     enamy.draw()

@@ -345,20 +345,21 @@ def enter():
 
 
 def exit():
-     global map,tile,chracter,move,pausenum,mouse_x,mouse_y
-     global stat,font,smallfont,timer,tiletype,turntype
-     del(map)
-     del(tile)
-     del(chracter)
-     del(move)
-     del(pausenum)
-     del(mouse_x,mouse_y)
-     del(stat)
-     del(font)
-     del(smallfont)
-     del(timer)
-     del(tiletype)
-     del(turntype)
+     # global map,tile,chracter,move,pausenum,mouse_x,mouse_y
+     # global stat,font,smallfont,timer,tiletype,turntype
+     # del(map)
+     # del(tile)
+     # del(chracter)
+     # del(move)
+     # del(pausenum)
+     # del(mouse_x,mouse_y)
+     # del(stat)
+     # del(font)
+     # del(smallfont)
+     # del(timer)
+     # del(tiletype)
+     # del(turntype)
+     pass
 
 
 def pause():

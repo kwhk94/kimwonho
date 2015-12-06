@@ -168,14 +168,14 @@ def battleupdate():
 def battledraw():
     global battleturn,turntime,t_time,time_num
     if battleturn>=3 and battleturn<=4  and time_num-turntime>1: #일정시간이 지난후 데미지계산
-                map.font.draw(800-250,600-420,"%d"%stat.damage,color=(100,100,100))
-                map.font.draw(800-330,600-380,'Damage :',color=(100,100,100))
+                map.font.draw(800-250,600-420,"%d"%stat.damage,color=(250,250,250))
+                map.font.draw(800-330,600-380,'Damage :',color=(255,100,100))
                 if battleturn==3:
                         battleturn=4
                         t_time=time_num
     if battleturn>=6 and battleturn<=7  and time_num-turntime>1: #일정시간이 지난후 데미지계산
-                map.font.draw(800-250,600-420,"%d"%e_stat.damage,color=(100,100,100))
-                map.font.draw(800-330,600-380,'Damage :',color=(100,100,100))
+                map.font.draw(800-250,600-420,"%d"%e_stat.damage,color=(250,250,250))
+                map.font.draw(800-330,600-380,'Damage :',color=(255,100,100))
 
 
 def enter():
@@ -183,6 +183,15 @@ def enter():
     global enamy,stat,battlturn,e_stat
     global time_num  #지속적인 게임 시간
     global turntime #턴이 지나갈때마다의 순간 시간
+    global backP
+    if map.chracter.type==2:
+        backP=load_image("png\\dungen2.jpg")
+    elif map.chracter.type==3:
+        backP=load_image("png\\castle.jpg")
+    elif map.chracter.type==5:
+        backP=load_image("png\\tower.jpg")
+    elif map.chracter.type==20:
+        backP=load_image("png\\castle.jpg")
     turntime=0
     time_num=0
     e_stat=statclass.E_stat()
@@ -197,10 +206,11 @@ def enter():
     current_time=get_time()
 
 def exit():
-    global diceteam
-    global enamy
-    del(diceteam)
-    del(enamy)
+    # global diceteam
+    # global enamy
+    # del(diceteam)
+    # del(enamy)
+    pass
 
 def pause():
     global dice_num
@@ -243,8 +253,10 @@ def draw():
     global time_num
     global battleturn
     global e_stat
+    global backP
     #print("%f,%f"%(battleturn,stat.damage))
     clear_canvas()
+    backP.draw_to_origin(0,0)
     if battleturn>0 and battleturn<5:
          num=0
          for dice in diceteam:

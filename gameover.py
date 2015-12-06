@@ -16,8 +16,8 @@ def enter():
 
 
 def exit():
-    global image
-    del(image)
+    # global image
+    # del(image)
     close_canvas()
 
 

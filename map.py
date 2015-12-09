@@ -33,14 +33,6 @@ class Dice():
 
 
 
-class Music():
-    bgm=None
-    def __init__(self):
-        if self.bgm==None:
-            self.bgm=load_music('etc\\bgm.ogg')
-            self.bgm.set_volume(24)
-            self.bgm.repeat_play()
-
 
 class Stat():
     global statpng
@@ -318,7 +310,9 @@ def enter():
     xpos,ypos=0,0
     actionnumber=0
     card=Card()
-    bgm=Music()
+    bgm=load_music('etc\\bgm.ogg')
+    bgm.set_volume(18)
+    bgm.repeat_play()
     turnnumber=1
     turntype=0
     tiletype=0

@@ -59,8 +59,8 @@ class Enamy():
          #   Enamy.str=load_image("png\\armor.png")
         Enamy.Chracter_x, Enamy.Chracter_y=0,0
         if map.turnnumber<130:
-            Enamy.hp=self.hplist[ self.number]-1+(int)(map.turnnumber/30)#적군 벨런스 조정
-            Enamy.maxhp=self.hplist[ self.number]-1+(int)(map.turnnumber/30)#적군 벨런스 조정
+            Enamy.hp=self.hplist[self.number]-1+(int)(map.turnnumber/30)#적군 벨런스 조정
+            Enamy.maxhp=self.hplist[self.number]-1+(int)(map.turnnumber/30)#적군 벨런스 조정
         else :
             Enamy.hp=self.hplist[ self.number]+2
             Enamy.maxhp=self.hplist[ self.number]+2

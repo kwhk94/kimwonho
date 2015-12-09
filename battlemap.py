@@ -17,6 +17,7 @@ class Dice():
     ACTION_PER_TIME=1.0/TIME_PER_ACTION
     FRAMES_PER_ACTION=22
     ON,OFF=1,0
+    sound=None
 
     def __init__(self):
         if Dice.image==None:
@@ -39,6 +40,7 @@ class Dice():
 
     def draw(self):
          self.image.clip_draw(1+(self.frame)*140,283*(6-(self.number)),140,240,self.xpos,100+self.ypos*100)
+
 
 
 def handle_events():
@@ -81,7 +83,7 @@ def handle_events():
 
 def battleupdate():
     global battleturn,turntime,t_time,time_num,dice_num,enamy_dice
-    global stat,diceteam,chracter
+    global stat,diceteam,chracter,sword,shield
     if battleturn==1 :
             for i in range(map.chracter.str):
                 if  dice_num[i]>=5: #주사위 성공 체크 숫자
@@ -100,7 +102,14 @@ def battleupdate():
                 if stat.damage>0:
                     if enamy.df>0:
                         enamy.df-=1
-                    else : enamy.hp-=1
+                        shield.set_volume(125)
+                        shield.play()
+                        shield.set_volume(24)
+                    else :
+                        enamy.hp-=1
+                        sword.set_volume(125)
+                        sword.play()
+                        sword.set_volume(24)
                     stat.damage-=1
                     if enamy.hp==0: #경험치 초과로인한 레벨업
                         map.chracter.gold+=enamy.maxhp
@@ -139,7 +148,10 @@ def battleupdate():
                 if e_stat.damage>0:
                     if map.chracter.df>0:
                         map.chracter.df-=1
-                    else : map.chracter.hp-=1
+                        shield.play()
+                    else :
+                        map.chracter.hp-=1
+                        sword.play()
                     e_stat.damage-=1
                     t_time=time_num
                 elif e_stat.damage==0:
@@ -180,7 +192,7 @@ def battledraw():
 
 def enter():
     global diceteam, dice_num,current_time,battleturn,enamy_dice
-    global enamy,stat,battlturn,e_stat
+    global enamy,stat,battlturn,e_stat,sword,shield,bgm
     global time_num  #지속적인 게임 시간
     global turntime #턴이 지나갈때마다의 순간 시간
     global backP
@@ -192,8 +204,15 @@ def enter():
         backP=load_image("png\\tower.jpg")
     elif map.chracter.type==20:
         backP=load_image("png\\castle.jpg")
+    bgm=load_music('etc\\bgm.ogg')
+    bgm.set_volume(18)
+    bgm.repeat_play()
     turntime=0
     time_num=0
+    sword=load_wav('etc\\sword.ogg')
+    shield=load_wav('etc\\defend.ogg')
+    sword.set_volume(125)
+    shield.set_volume(128)
     e_stat=statclass.E_stat()
     stat=statclass.Stat_downside()
     enamy=enamyclass.Enamy()

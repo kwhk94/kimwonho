@@ -8,6 +8,7 @@ import map
 import enamyclass
 import statclass
 import gameover
+import Youwin
 
 
 class Dice():
@@ -39,6 +40,10 @@ class Dice():
          self.total_frame+=Dice.FRAMES_PER_ACTION*Dice.ACTION_PER_TIME*self.time
 
     def draw(self):
+         global dicebgm
+         if self.frame==0:
+             dicebgm.play()
+
          self.image.clip_draw(1+(self.frame)*140,283*(6-(self.number)),140,240,self.xpos,100+self.ypos*100)
 
 
@@ -57,11 +62,9 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
-        elif event.type == SDL_KEYDOWN and event.key==SDLK_b:
-             game_framework.pop_state()
         elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_i):
                  stat.onoff= not stat.onoff
-        elif event.type == SDL_KEYDOWN and event.key==SDLK_c: #전투 초기화
+        elif event.type == SDL_KEYDOWN and event.key==SDLK_a: #전투 초기화
             if  battleturn==0 or battleturn==7:
                 num=0
                 stat.currentime=get_time()
@@ -76,8 +79,11 @@ def handle_events():
                     dice_num=[diceteam[i].number for i in  range(map.chracter.str)]
                 battleturn=1
         elif  (event.type,event.key)==(SDL_KEYDOWN,SDLK_SPACE):
+            if map.chracter.type==20 and battleturn==8:
+                game_framework.push_state(Youwin)
             if battleturn==8:
                 game_framework.pop_state()
+
 
 
 
@@ -98,7 +104,7 @@ def battleupdate():
                      turntime=time_num
                      battleturn=3
     if battleturn==4:
-            if time_num-t_time>2: #2초씩 데미지계산
+            if time_num-t_time>0.5: #2초씩 데미지계산
                 if stat.damage>0:
                     if enamy.df>0:
                         enamy.df-=1
@@ -144,7 +150,7 @@ def battleupdate():
                      t_time=turntime
                      battleturn=6
     if battleturn==6:
-            if time_num-t_time>2: #2초씩 데미지계산
+            if time_num-t_time>0.5: #2초씩 데미지계산
                 if e_stat.damage>0:
                     if map.chracter.df>0:
                         map.chracter.df-=1
@@ -192,7 +198,7 @@ def battledraw():
 
 def enter():
     global diceteam, dice_num,current_time,battleturn,enamy_dice
-    global enamy,stat,battlturn,e_stat,sword,shield,bgm
+    global enamy,stat,battlturn,e_stat,sword,shield,bgm,dicebgm
     global time_num  #지속적인 게임 시간
     global turntime #턴이 지나갈때마다의 순간 시간
     global backP
@@ -209,8 +215,11 @@ def enter():
     bgm.repeat_play()
     turntime=0
     time_num=0
+
     sword=load_wav('etc\\sword.ogg')
     shield=load_wav('etc\\defend.ogg')
+    dicebgm=load_wav('etc\\dice.ogg')
+    dicebgm.set_volume(15)
     sword.set_volume(125)
     shield.set_volume(128)
     e_stat=statclass.E_stat()
@@ -298,6 +307,8 @@ def draw():
          map.bigfont.draw(200,100,"PRESS SPACE!",color=(230,0,0))
     if battleturn==9:
         map.bigfont.draw(200,100,"LEVEL UP!",color=(230,0,0))
+    if battleturn==0:
+        map.bigfont.draw(200,100,"PRESS A!",color=(230,0,0))
     update_canvas()
 
     delay(0.03)

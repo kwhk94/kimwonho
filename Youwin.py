@@ -10,10 +10,10 @@ logo_time = 0.0
 
 
 def enter():
-    global image,time_num,current_time
+    global image,current_time,time_num
+    image = load_image('png\\YOUWIN.png')
     time_num=get_time()
     current_time=get_time()
-    image = load_image('png\\gameover.png')
 
 
 def exit():
@@ -47,12 +47,11 @@ def draw():
          map.font.draw(300,250,'%d'%(map.chracter.str*100),color=(255,100,100))
 
     if current_time-time_num>6:
-         map.font.draw(100,200,"DEATH  :",color=(250,250,250))
-         map.font.draw(300,200,'%d'%(-1000),color=(255,100,100))
-
+         map.font.draw(100,200,"Total  :",color=(250,250,250))
+         map.font.draw(300,200,'%d'%(map.chracter.hp*100-map.turnnumber*10+map.chracter.df*300+map.chracter.str*100),color=(255,100,100))
     if current_time-time_num>7:
-         map.font.draw(100,150,"Total  :",color=(250,250,250))
-         map.font.draw(300,150,'%d'%(map.chracter.hp*100-map.turnnumber*10+map.chracter.df*300+map.chracter.str*100-1000),color=(255,100,100))
+         map.bigfont.draw(100,150,"YOU  ",color=(250,250,250))
+         map.bigfont.draw(300,150,'WIN',color=(255,100,100))
     update_canvas()
 
 
@@ -76,4 +75,5 @@ def resume(): pass
 
 
 
+__author__ = 'kkk'
 __author__ = 'kkk'

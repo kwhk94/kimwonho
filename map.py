@@ -11,6 +11,7 @@ import gameover
 import mapclass
 import villege
 import ruins
+import Youwin
 from Tileclass import Tile as Tile
 from Tileclass import Move as Move
 from cardclass import Card as Card
@@ -195,17 +196,13 @@ def handle_events():
                     if turntype!=0:
                         turnnumber+=1
                     turntype=0
-            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_a):
-                 game_framework.push_state(battlemap)
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_p):
                 if pausenum==1: pausenum=0
                 elif pausenum==0:pausenum=1
-            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_o):
-                 print(chracter.type)
+            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_q):
+                game_framework.push_state(Youwin)
             elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_i) and turntype!=2:
                  stat.onoff= not stat.onoff
-            elif(event.type,event.key)==(SDL_KEYDOWN,SDLK_q):
-                 game_framework.push_state(villege)
             if (event.type,event.button)==(SDL_MOUSEBUTTONDOWN,SDL_BUTTON_LEFT):
                      mouse_x,mouse_y=event.x,599-event.y
                      if turntype==2:

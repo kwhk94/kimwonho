@@ -59,7 +59,7 @@ def result(num):
                 if map.chracter.maxhp>1:
                     map.chracter.hp-=1
                     map.chracter.maxhp-=1
-        elif num>=5 and num<10:
+        elif num>=5 and num<15:
                 map.chracter.gold=0
         elif num>15 and num<map.chracter.luk*5+15 and map.chracter.luk<5:
                 map.chracter.luk+=1

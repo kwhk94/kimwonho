@@ -219,7 +219,7 @@ def enter():
     sword=load_wav('etc\\sword.ogg')
     shield=load_wav('etc\\defend.ogg')
     dicebgm=load_wav('etc\\dice.ogg')
-    dicebgm.set_volume(15)
+    dicebgm.set_volume(10)
     sword.set_volume(125)
     shield.set_volume(128)
     e_stat=statclass.E_stat()

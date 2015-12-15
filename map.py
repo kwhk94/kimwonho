@@ -303,12 +303,13 @@ def enter():
     global stat,font,smallfont,bigfont
     global timer,tiletype,turntype,turnnumber
     global current_time,bgm,card, actionnumber
-    global xpos,ypos
+    global xpos,ypos,back
     xpos,ypos=0,0
     actionnumber=0
+    back=load_image('png\\back.png')
     card=Card()
     bgm=load_music('etc\\bgm.ogg')
-    bgm.set_volume(18)
+    bgm.set_volume(28)
     bgm.repeat_play()
     turnnumber=1
     turntype=0
@@ -393,11 +394,14 @@ def draw():
     global map
     global bigfont
     global turntype
-    global actionnumber
+    global actionnumber,back
+
 
 
     clear_canvas()
     handle_events()
+
+    back.clip_draw(0,0,800,600,400,300)
 
     for m in map:
          m.draw()

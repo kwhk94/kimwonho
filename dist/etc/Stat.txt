@@ -1,0 +1,16 @@
+{
+    "HP":3, "DF":1,
+    "STR":3,"AGI":2,
+    "LUK":1,
+    "Gold":2,
+    "Enamy":{  "guardsman":{ "str": 1, "hp" : 3  }   }
+
+	
+}
+
+
+
+
+
+
+
